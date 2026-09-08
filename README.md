@@ -1,4 +1,17 @@
-# SleepPro 0.1-PUBLIC
+<p align="center">
+  <img src="banner.png" alt="SleepPro" width="100%">
+</p>
+
+<p align="center">
+  <strong>A powerful multi-version server core for Minecraft: Bedrock Edition, written in PHP.</strong>
+</p>
+
+<p align="center">
+  <a href="https://github.com/SleepPro-Core-Minecraft-BE/SleepPro"><img src="https://img.shields.io/badge/SleepPro-0.4--BETA-f0ad4e" alt="SleepPro 0.1-PUBLIC"></a>
+  <img src="https://img.shields.io/badge/API-5.44.2-blue" alt="API 5.44.2">
+  <img src="https://img.shields.io/badge/Bedrock-1.20.0--1.26.45-brightgreen" alt="Minecraft Bedrock 1.20.0–1.26.45">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0-lightgrey" alt="LGPL-3.0"></a>
+</p>
 
 PUBLIC-сборка на основе NetherGamesMC/PocketMine-MP. Здесь только ребрендинг,
 сетевые протоколы и палитры. Дополнительные механизмы, ИИ мобов и прочие
