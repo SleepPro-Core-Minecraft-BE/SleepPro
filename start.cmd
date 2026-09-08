@@ -22,10 +22,10 @@ if "%PHP_BINARY%"=="" (
 	exit 1
 )
 
-if exist SleepPro-0.4-BETA.phar (
-	set POCKETMINE_FILE=SleepPro-0.4-BETA.phar
+if exist SleepPro-0.1-PUBLIC.phar (
+	set POCKETMINE_FILE=SleepPro-0.1-PUBLIC.phar
 ) else (
-	echo SleepPro-0.4-BETA.phar not found
+	echo SleepPro-0.1-PUBLIC.phar not found
 	echo Downloads can be found at https://vk.com/sleepwpro
 	pause
 	exit 1

@@ -1,13 +1,11 @@
 # Сборка SleepPro PUBLIC
 
-ВЫ ИСПОЛЬЗУЕТЕ PUBLIC ВЕРСИЮ ЯДРА. КУПИТЬ ПАРТНЁРКУ ЯДРА SLEEPPRO С ВАНИЛЬНОСТЬЮ — НАПИШИТЕ НАМ https://vk.com/sleepwpro
-
 Нужны PHP 8.1+ с расширениями из `composer.json`, Composer и Git.
 Обычного системного PHP без расширений ядра недостаточно.
 
 ```sh
 composer install --no-dev --prefer-dist
-php -d phar.readonly=0 build/server-phar.php --out=SleepPro-0.4-BETA.phar
+php -d phar.readonly=0 build/server-phar.php --out=SleepPro-0.1-PUBLIC.phar
 ./start.sh -p /path/to/compatible/php
 ```
 

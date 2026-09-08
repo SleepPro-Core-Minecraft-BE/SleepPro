@@ -143,7 +143,7 @@ function lockPharCache(string $lockFilePath) : void{
 }
 
 /**
- * Prepares a decompressed .tar of SleepPro-0.4-BETA.phar in the system temp directory for loading code from.
+ * Prepares a decompressed .tar of SleepPro-0.1-PUBLIC.phar in the system temp directory for loading code from.
  *
  * @return string path to the temporary decompressed phar (actually a .tar)
  */
@@ -161,7 +161,7 @@ function preparePharCache(string $tmpPath, string $pharPath) : string{
 
 $tmpDir = preparePharCacheDirectory();
 cleanupPharCache($tmpDir);
-echo "Preparing SleepPro-0.4-BETA.phar decompressed cache...\n";
+echo "Preparing SleepPro-0.1-PUBLIC.phar decompressed cache...\n";
 $start = hrtime(true);
 $cacheName = preparePharCache($tmpDir, __FILE__);
 echo "Cache ready at $cacheName in " . number_format((hrtime(true) - $start) / 1e9, 2) . "s\n";
