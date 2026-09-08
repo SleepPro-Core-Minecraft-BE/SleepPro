@@ -116,6 +116,10 @@ function buildPhar(string $pharPath, string $basePath, array $includedPaths, arr
 	$regexIterator = new \RegexIterator($iterator, $regex);
 
 	$count = count($phar->buildFromIterator($regexIterator, $basePath));
+	foreach(['LICENSE', 'LICENSE.GPL-3.0'] as $licenseFile){
+		$phar->addFile($basePath . $licenseFile, $licenseFile);
+		++$count;
+	}
 	yield "Added $count files";
 
 	if($compression !== null){
@@ -164,7 +168,6 @@ function main() : void{
 		dirname(__DIR__) . DIRECTORY_SEPARATOR,
 		[
 			'generated',
-			'LICENSE',
 			'resources',
 			'src',
 			'vendor'
