@@ -7,10 +7,10 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/SleepPro-Core-Minecraft-BE/SleepPro"><img src="https://img.shields.io/badge/SleepPro-0.4--BETA-f0ad4e" alt="SleepPro 0.1-PUBLIC"></a>
+  <a href="https://github.com/SleepPro-Core-Minecraft-BE/SleepPro"><img src="https://img.shields.io/badge/SleepPro-0.1--PUBLIC-f0ad4e" alt="SleepPro 0.1-PUBLIC"></a>
   <img src="https://img.shields.io/badge/API-5.44.2-blue" alt="API 5.44.2">
   <img src="https://img.shields.io/badge/Bedrock-1.20.0--1.26.45-brightgreen" alt="Minecraft Bedrock 1.20.0–1.26.45">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-GPL--3.0-lightgrey" alt="LGPL-3.0"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-LGPL--3.0-lightgrey" alt="LGPL-3.0"></a>
 </p>
 
 PUBLIC-сборка на основе NetherGamesMC/PocketMine-MP. Здесь только ребрендинг,
