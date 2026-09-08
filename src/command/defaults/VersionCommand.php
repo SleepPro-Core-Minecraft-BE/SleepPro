@@ -57,7 +57,7 @@ class VersionCommand extends VanillaCommand{
 			));
 			$versionColor = VersionInfo::IS_DEVELOPMENT_BUILD ? TextFormat::YELLOW : TextFormat::GREEN;
 			$sender->sendMessage(KnownTranslationFactory::pocketmine_command_version_serverSoftwareVersion(
-				$versionColor . VersionInfo::VERSION()->getFullVersion() . TextFormat::RESET,
+				$versionColor . VersionInfo::PUBLIC_VERSION . TextFormat::RESET,
 				TextFormat::GREEN . VersionInfo::GIT_HASH() . TextFormat::RESET
 			));
 			$sender->sendMessage(KnownTranslationFactory::pocketmine_command_version_minecraftVersion(

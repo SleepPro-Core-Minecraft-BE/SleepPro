@@ -1,4 +1,4 @@
-﻿[CmdletBinding(PositionalBinding=$false)]
+[CmdletBinding(PositionalBinding=$false)]
 param (
 	[string]$php = "",
 	[switch]$Loop = $false,
@@ -15,17 +15,17 @@ if($php -ne ""){
 	$binary = "php"
 }else{
 	echo "Couldn't find a PHP binary in system PATH or $pwd\bin\php"
-	echo "Please refer to the installation instructions at https://doc.pmmp.io/en/rtfd/installation.html"
+	echo "Please refer to the installation instructions at https://vk.com/sleepwpro"
 	pause
 	exit 1
 }
 
 if($file -eq ""){
-	if(Test-Path "PocketMine-MP.phar"){
-	    $file = "PocketMine-MP.phar"
+	if(Test-Path "SleepPro-0.4-BETA.phar"){
+	    $file = "SleepPro-0.4-BETA.phar"
 	}else{
-	    echo "PocketMine-MP.phar not found"
-	    echo "Downloads can be found at https://github.com/pmmp/PocketMine-MP/releases"
+	    echo "SleepPro-0.4-BETA.phar not found"
+	    echo "Downloads can be found at https://vk.com/sleepwpro"
 	    pause
 	    exit 1
 	}

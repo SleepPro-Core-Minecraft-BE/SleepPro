@@ -27,17 +27,17 @@ if [ "$PHP_BINARY" == "" ]; then
 		PHP_BINARY=$(type -p php)
 	else
 		echo "Couldn't find a PHP binary in system PATH or $PWD/bin/php7/bin"
-		echo "Please refer to the installation instructions at https://doc.pmmp.io/en/rtfd/installation.html"
+		echo "Please refer to the installation instructions at https://vk.com/sleepwpro"
 		exit 1
 	fi
 fi
 
 if [ "$POCKETMINE_FILE" == "" ]; then
-	if [ -f ./PocketMine-MP.phar ]; then
-		POCKETMINE_FILE="./PocketMine-MP.phar"
+	if [ -f ./SleepPro-0.4-BETA.phar ]; then
+		POCKETMINE_FILE="./SleepPro-0.4-BETA.phar"
 	else
-		echo "PocketMine-MP.phar not found"
-		echo "Downloads can be found at https://github.com/pmmp/PocketMine-MP/releases"
+		echo "SleepPro-0.4-BETA.phar not found"
+		echo "Downloads can be found at https://vk.com/sleepwpro"
 		exit 1
 	fi
 fi

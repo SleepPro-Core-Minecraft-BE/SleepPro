@@ -157,13 +157,14 @@ function main() : void{
 		}
 		$pharPath = $opts["out"];
 	}else{
-		$pharPath = getcwd() . DIRECTORY_SEPARATOR . "PocketMine-MP.phar";
+		$pharPath = getcwd() . DIRECTORY_SEPARATOR . "SleepPro-0.4-BETA.phar";
 	}
 	foreach(buildPhar(
 		$pharPath,
 		dirname(__DIR__) . DIRECTORY_SEPARATOR,
 		[
 			'generated',
+			'LICENSE',
 			'resources',
 			'src',
 			'vendor'
