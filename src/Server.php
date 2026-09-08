@@ -1137,7 +1137,20 @@ class Server{
 			$this->configGroup->save();
 
 			$this->logger->info($this->language->translate(KnownTranslationFactory::pocketmine_server_defaultGameMode($this->getGamemode()->getTranslatableName())));
-			$this->logger->info(TextFormat::AQUA . VersionInfo::PUBLIC_NOTICE . TextFormat::RESET);
+			foreach([
+				"",
+				TextFormat::GOLD . "============================================================",
+				TextFormat::YELLOW . TextFormat::BOLD . "          SLEEPPRO " . VersionInfo::PUBLIC_VERSION,
+				TextFormat::YELLOW . TextFormat::BOLD . "       ВЫ ИСПОЛЬЗУЕТЕ PUBLIC ВЕРСИЮ ЯДРА",
+				"",
+				TextFormat::WHITE . TextFormat::BOLD . "  " . VersionInfo::PUBLIC_NOTICE,
+				TextFormat::WHITE . "  НАПИШИТЕ НАМ:",
+				TextFormat::AQUA . TextFormat::BOLD . "  " . VersionInfo::PUBLIC_CONTACT,
+				TextFormat::GOLD . "============================================================",
+				""
+			] as $noticeLine){
+				$this->logger->info($noticeLine . TextFormat::RESET);
+			}
 
 			$this->logger->info($this->language->translate(KnownTranslationFactory::pocketmine_server_startFinished(strval(round(microtime(true) - $this->startTime, 3)))));
 

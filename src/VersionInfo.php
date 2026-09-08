@@ -32,7 +32,8 @@ use function str_repeat;
 final class VersionInfo{
 	public const NAME = "SleepPro";
 	public const PUBLIC_VERSION = "0.1-PUBLIC";
-	public const PUBLIC_NOTICE = "ВЫ ИСПОЛЬЗУЕТЕ PUBLIC ВЕРСИЮ ЯДРА. КУПИТЬ ПАРТНЁРКУ ЯДРА SLEEPPRO С ВАНИЛЬНОСТЬЮ — НАПИШИТЕ НАМ https://vk.com/sleepwpro";
+	public const PUBLIC_NOTICE = "КУПИТЬ ПАРТНЁРКУ SLEEPPRO С ВАНИЛЬНОСТЬЮ";
+	public const PUBLIC_CONTACT = "https://vk.com/sleepwpro";
 	public const BASE_VERSION = "5.44.2";
 	public const IS_DEVELOPMENT_BUILD = false;
 	public const BUILD_CHANNEL = "stable";
