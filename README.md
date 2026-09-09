@@ -22,8 +22,6 @@ PUBLIC-сборка на основе NetherGamesMC/PocketMine-MP. Здесь т
 - Файл сборки: `SleepPro-0.1-PUBLIC.phar`.
 - Основной конфиг: `settings.yml`.
 
-Инструкции сборки находятся в [BUILDING.md](BUILDING.md).
-
 Сетевая библиотека: `kostamax27/BedrockProtocol-NG`, commit `d29c470f71`;
 палитры: `kostamax27/BedrockData-NG`, commit `81210858a5`.
 Зависимости зафиксированы в `composer.lock`. Диапазон библиотеки: 1.20.0–1.26.45.
