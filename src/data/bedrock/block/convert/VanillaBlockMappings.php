@@ -165,6 +165,10 @@ final class VanillaBlockMappings{
 		$reg->mapSimple(Blocks::AZALEA(), Ids::AZALEA);
 		$reg->mapSimple(Blocks::BARRIER(), Ids::BARRIER);
 		$reg->mapSimple(Blocks::BEACON(), Ids::BEACON);
+		$reg->mapModel(Model::create(Blocks::BEEHIVE(), Ids::BEEHIVE)->properties([
+			new DummyProperty(StateNames::DIRECTION, 0),
+			new DummyProperty(StateNames::HONEY_LEVEL, 0)
+		]));
 		$reg->mapSimple(Blocks::BLACKSTONE(), Ids::BLACKSTONE);
 		$reg->mapSimple(Blocks::BLUE_ICE(), Ids::BLUE_ICE);
 		$reg->mapSimple(Blocks::BOOKSHELF(), Ids::BOOKSHELF);
@@ -384,6 +388,15 @@ final class VanillaBlockMappings{
 		$reg->mapSimple(Blocks::MELON(), Ids::MELON_BLOCK);
 		$reg->mapSimple(Blocks::MONSTER_SPAWNER(), Ids::MOB_SPAWNER);
 		$reg->mapSimple(Blocks::MOSS_BLOCK(), Ids::MOSS_BLOCK);
+		$reg->mapSimple(Blocks::MOSS_CARPET(), Ids::MOSS_CARPET);
+		$reg->mapModel(Model::create(Blocks::COMPOSTER(), Ids::COMPOSTER)->properties([
+			new DummyProperty(StateNames::COMPOSTER_FILL_LEVEL, 0)
+		]));
+		$reg->mapModel(Model::create(Blocks::SCAFFOLDING(), Ids::SCAFFOLDING)->properties([
+			new DummyProperty(StateNames::STABILITY, 0),
+			new DummyProperty(StateNames::STABILITY_CHECK, false)
+		]));
+		$reg->mapSimple(Blocks::END_PORTAL(), Ids::END_PORTAL);
 		$reg->mapSimple(Blocks::MOSSY_COBBLESTONE(), Ids::MOSSY_COBBLESTONE);
 		$reg->mapSimple(Blocks::MOSSY_STONE_BRICKS(), Ids::MOSSY_STONE_BRICKS);
 		$reg->mapSimple(Blocks::MUD(), Ids::MUD);

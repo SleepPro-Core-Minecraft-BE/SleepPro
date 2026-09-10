@@ -35,7 +35,9 @@ use pocketmine\item\Potion;
 use pocketmine\item\SplashPotion;
 use pocketmine\item\VanillaItems;
 use pocketmine\nbt\tag\CompoundTag;
+use pocketmine\nbt\tag\ByteTag;
 use pocketmine\nbt\tag\IntTag;
+use pocketmine\nbt\tag\ShortTag;
 use pocketmine\network\mcpe\convert\TypeConverter;
 use pocketmine\utils\AssumptionFailedError;
 use pocketmine\utils\Binary;
@@ -86,8 +88,8 @@ final class Cauldron extends Spawnable{
 	}
 
 	public function readSaveData(CompoundTag $nbt) : void{
-		$containerType = $nbt->getShort(self::TAG_POTION_CONTAINER_TYPE, self::POTION_CONTAINER_TYPE_NONE);
-		$potionId = $nbt->getShort(self::TAG_POTION_ID, self::POTION_ID_NONE);
+		$containerType = self::readLegacyNumericTag($nbt, self::TAG_POTION_CONTAINER_TYPE, self::POTION_CONTAINER_TYPE_NONE);
+		$potionId = self::readLegacyNumericTag($nbt, self::TAG_POTION_ID, self::POTION_ID_NONE);
 		if($containerType !== self::POTION_CONTAINER_TYPE_NONE && $potionId !== self::POTION_ID_NONE){
 			$potionType = PotionTypeIdMap::getInstance()->fromId($potionId);
 			if($potionType === null){
@@ -104,6 +106,15 @@ final class Cauldron extends Spawnable{
 		}
 
 		$this->customWaterColor = ($customColorTag = $nbt->getTag(self::TAG_CUSTOM_COLOR)) instanceof IntTag ? Color::fromARGB(Binary::unsignInt($customColorTag->getValue())) : null;
+	}
+
+	/**
+	 * Older Bedrock worlds used TAG_Byte for these values, while newer worlds
+	 * use TAG_Short. Accept both encodings and normalize them on the next save.
+	 */
+	private static function readLegacyNumericTag(CompoundTag $nbt, string $name, int $default) : int{
+		$tag = $nbt->getTag($name);
+		return $tag instanceof ByteTag || $tag instanceof ShortTag || $tag instanceof IntTag ? $tag->getValue() : $default;
 	}
 
 	protected function writeSaveData(CompoundTag $nbt) : void{
