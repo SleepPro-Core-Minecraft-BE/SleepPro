@@ -98,7 +98,7 @@ final class VanillaBlocks{
 	private static Beacon $_mBEACON;
 	private static Bed $_mBED;
 	private static Bedrock $_mBEDROCK;
-	private static Opaque $_mBEEHIVE;
+	private static Beehive $_mBEEHIVE;
 	private static Beetroot $_mBEETROOTS;
 	private static Bell $_mBELL;
 	private static BigDripleafHead $_mBIG_DRIPLEAF_HEAD;
@@ -200,7 +200,7 @@ final class VanillaBlocks{
 	private static Wall $_mCOBBLESTONE_WALL;
 	private static Cobweb $_mCOBWEB;
 	private static CocoaBlock $_mCOCOA_POD;
-	private static Transparent $_mCOMPOSTER;
+	private static Composter $_mCOMPOSTER;
 	private static ChemistryTable $_mCOMPOUND_CREATOR;
 	private static Concrete $_mCONCRETE;
 	private static ConcretePowder $_mCONCRETE_POWDER;
@@ -723,7 +723,7 @@ final class VanillaBlocks{
 	private static Slab $_mSANDSTONE_SLAB;
 	private static Stair $_mSANDSTONE_STAIRS;
 	private static Wall $_mSANDSTONE_WALL;
-	private static Transparent $_mSCAFFOLDING;
+	private static Scaffolding $_mSCAFFOLDING;
 	private static Sculk $_mSCULK;
 	private static SeaLantern $_mSEA_LANTERN;
 	private static SeaPickle $_mSEA_PICKLE;
@@ -937,7 +937,7 @@ final class VanillaBlocks{
 			"beacon" => fn(Beacon $v) => self::$_mBEACON = $v,
 			"bed" => fn(Bed $v) => self::$_mBED = $v,
 			"bedrock" => fn(Bedrock $v) => self::$_mBEDROCK = $v,
-			"beehive" => fn(Opaque $v) => self::$_mBEEHIVE = $v,
+			"beehive" => fn(Beehive $v) => self::$_mBEEHIVE = $v,
 			"beetroots" => fn(Beetroot $v) => self::$_mBEETROOTS = $v,
 			"bell" => fn(Bell $v) => self::$_mBELL = $v,
 			"big_dripleaf_head" => fn(BigDripleafHead $v) => self::$_mBIG_DRIPLEAF_HEAD = $v,
@@ -1039,7 +1039,7 @@ final class VanillaBlocks{
 			"cobblestone_wall" => fn(Wall $v) => self::$_mCOBBLESTONE_WALL = $v,
 			"cobweb" => fn(Cobweb $v) => self::$_mCOBWEB = $v,
 			"cocoa_pod" => fn(CocoaBlock $v) => self::$_mCOCOA_POD = $v,
-			"composter" => fn(Transparent $v) => self::$_mCOMPOSTER = $v,
+			"composter" => fn(Composter $v) => self::$_mCOMPOSTER = $v,
 			"compound_creator" => fn(ChemistryTable $v) => self::$_mCOMPOUND_CREATOR = $v,
 			"concrete" => fn(Concrete $v) => self::$_mCONCRETE = $v,
 			"concrete_powder" => fn(ConcretePowder $v) => self::$_mCONCRETE_POWDER = $v,
@@ -1562,7 +1562,7 @@ final class VanillaBlocks{
 			"sandstone_slab" => fn(Slab $v) => self::$_mSANDSTONE_SLAB = $v,
 			"sandstone_stairs" => fn(Stair $v) => self::$_mSANDSTONE_STAIRS = $v,
 			"sandstone_wall" => fn(Wall $v) => self::$_mSANDSTONE_WALL = $v,
-			"scaffolding" => fn(Transparent $v) => self::$_mSCAFFOLDING = $v,
+			"scaffolding" => fn(Scaffolding $v) => self::$_mSCAFFOLDING = $v,
 			"sculk" => fn(Sculk $v) => self::$_mSCULK = $v,
 			"sea_lantern" => fn(SeaLantern $v) => self::$_mSEA_LANTERN = $v,
 			"sea_pickle" => fn(SeaPickle $v) => self::$_mSEA_PICKLE = $v,
@@ -2020,7 +2020,7 @@ final class VanillaBlocks{
 		return clone self::$_mBEDROCK;
 	}
 
-	public static function BEEHIVE() : Opaque{
+	public static function BEEHIVE() : Beehive{
 		if(!isset(self::$_mBEEHIVE)){ self::init(); }
 		return clone self::$_mBEEHIVE;
 	}
@@ -2530,7 +2530,7 @@ final class VanillaBlocks{
 		return clone self::$_mCOCOA_POD;
 	}
 
-	public static function COMPOSTER() : Transparent{
+	public static function COMPOSTER() : Composter{
 		if(!isset(self::$_mCOMPOSTER)){ self::init(); }
 		return clone self::$_mCOMPOSTER;
 	}
@@ -5145,7 +5145,7 @@ final class VanillaBlocks{
 		return clone self::$_mSANDSTONE_WALL;
 	}
 
-	public static function SCAFFOLDING() : Transparent{
+	public static function SCAFFOLDING() : Scaffolding{
 		if(!isset(self::$_mSCAFFOLDING)){ self::init(); }
 		return clone self::$_mSCAFFOLDING;
 	}

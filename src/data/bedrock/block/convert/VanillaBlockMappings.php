@@ -31,6 +31,7 @@ use pocketmine\block\BambooSapling;
 use pocketmine\block\Barrel;
 use pocketmine\block\Bed;
 use pocketmine\block\Bedrock;
+use pocketmine\block\Beehive;
 use pocketmine\block\Bell;
 use pocketmine\block\BigDripleafHead;
 use pocketmine\block\Block;
@@ -42,6 +43,7 @@ use pocketmine\block\CaveVines;
 use pocketmine\block\ChiseledBookshelf;
 use pocketmine\block\ChorusFlower;
 use pocketmine\block\CocoaBlock;
+use pocketmine\block\Composter;
 use pocketmine\block\Copper;
 use pocketmine\block\CopperLantern;
 use pocketmine\block\DaylightSensor;
@@ -78,6 +80,7 @@ use pocketmine\block\RedstoneRepeater;
 use pocketmine\block\RedstoneTorch;
 use pocketmine\block\RespawnAnchor;
 use pocketmine\block\Sapling;
+use pocketmine\block\Scaffolding;
 use pocketmine\block\SeaPickle;
 use pocketmine\block\SmallDripleaf;
 use pocketmine\block\SnowLayer;
@@ -166,8 +169,8 @@ final class VanillaBlockMappings{
 		$reg->mapSimple(Blocks::BARRIER(), Ids::BARRIER);
 		$reg->mapSimple(Blocks::BEACON(), Ids::BEACON);
 		$reg->mapModel(Model::create(Blocks::BEEHIVE(), Ids::BEEHIVE)->properties([
-			new DummyProperty(StateNames::DIRECTION, 0),
-			new DummyProperty(StateNames::HONEY_LEVEL, 0)
+			new IntProperty(StateNames::DIRECTION, 0, 3, fn(Beehive $b) => $b->getDirection(), fn(Beehive $b, int $v) => $b->setDirection($v)),
+			new IntProperty(StateNames::HONEY_LEVEL, 0, 5, fn(Beehive $b) => $b->getHoneyLevel(), fn(Beehive $b, int $v) => $b->setHoneyLevel($v))
 		]));
 		$reg->mapSimple(Blocks::BLACKSTONE(), Ids::BLACKSTONE);
 		$reg->mapSimple(Blocks::BLUE_ICE(), Ids::BLUE_ICE);
@@ -390,11 +393,11 @@ final class VanillaBlockMappings{
 		$reg->mapSimple(Blocks::MOSS_BLOCK(), Ids::MOSS_BLOCK);
 		$reg->mapSimple(Blocks::MOSS_CARPET(), Ids::MOSS_CARPET);
 		$reg->mapModel(Model::create(Blocks::COMPOSTER(), Ids::COMPOSTER)->properties([
-			new DummyProperty(StateNames::COMPOSTER_FILL_LEVEL, 0)
+			new IntProperty(StateNames::COMPOSTER_FILL_LEVEL, 0, 8, fn(Composter $b) => $b->getFillLevel(), fn(Composter $b, int $v) => $b->setFillLevel($v))
 		]));
 		$reg->mapModel(Model::create(Blocks::SCAFFOLDING(), Ids::SCAFFOLDING)->properties([
-			new DummyProperty(StateNames::STABILITY, 0),
-			new DummyProperty(StateNames::STABILITY_CHECK, false)
+			new IntProperty(StateNames::STABILITY, 0, 7, fn(Scaffolding $b) => $b->getStability(), fn(Scaffolding $b, int $v) => $b->setStability($v)),
+			new BoolProperty(StateNames::STABILITY_CHECK, fn(Scaffolding $b) => $b->needsStabilityCheck(), fn(Scaffolding $b, bool $v) => $b->setNeedsStabilityCheck($v))
 		]));
 		$reg->mapSimple(Blocks::END_PORTAL(), Ids::END_PORTAL);
 		$reg->mapSimple(Blocks::MOSSY_COBBLESTONE(), Ids::MOSSY_COBBLESTONE);
