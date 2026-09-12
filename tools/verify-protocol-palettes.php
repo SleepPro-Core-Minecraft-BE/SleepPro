@@ -44,15 +44,16 @@ $palette44 = BlockTranslator::loadFromProtocolId(ProtocolInfo::PROTOCOL_1_26_44)
 $palette45 = BlockTranslator::loadFromProtocolId(ProtocolInfo::PROTOCOL_1_26_45);
 $items44 = ItemTypeDictionaryFromDataHelper::loadFromProtocolId(ProtocolInfo::PROTOCOL_1_26_44);
 $items45 = ItemTypeDictionaryFromDataHelper::loadFromProtocolId(ProtocolInfo::PROTOCOL_1_26_45);
-$expectedAirNetworkId = -604749536;
+$air44 = $palette44->getBlockStateDictionary()->lookupStateIdFromData(BlockStateData::current(BlockTypeNames::AIR, []));
+$air45 = $palette45->getBlockStateDictionary()->lookupStateIdFromData(BlockStateData::current(BlockTypeNames::AIR, []));
 
 if(
 	count($items44->getEntries()) !== count($items45->getEntries()) ||
 	count($palette44->getBlockStateDictionary()->getStates()) !== count($palette45->getBlockStateDictionary()->getStates()) ||
-	$palette44->getBlockStateDictionary()->lookupStateIdFromData(BlockStateData::current(BlockTypeNames::AIR, [])) !== $expectedAirNetworkId ||
-	$palette45->getBlockStateDictionary()->lookupStateIdFromData(BlockStateData::current(BlockTypeNames::AIR, [])) !== $expectedAirNetworkId
+	$air44 === null ||
+	$air44 !== $air45
 ){
-	throw new RuntimeException('Minecraft 1.26.44 and 1.26.45 must use the same hashed Bedrock registries');
+	throw new RuntimeException('Minecraft 1.26.44 and 1.26.45 must use the same sequential Bedrock registries');
 }
 
 printf(

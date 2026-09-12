@@ -43,9 +43,9 @@ final class BlockTranslator{
 	public const BLOCK_STATE_META_MAP_PATH = 1;
 
 	private const PATHS = [
-		// 1.26.45 is a protocol-only update. Protocols 2168 and 2169 share the
-		// same states and hashed runtime IDs; loadFromProtocolId() selects the BDS
-		// hash palette for this protocol family.
+		// Protocols 2168 and 2169 share the same sequential runtime palette.
+		// This matches the StartGame blockNetworkIdsAreHashes=false mode used by
+		// current multiversion Bedrock servers.
 		ProtocolInfo::CURRENT_PROTOCOL => [
 			self::CANONICAL_BLOCK_STATES_PATH => '',
 			self::BLOCK_STATE_META_MAP_PATH => '',
@@ -185,9 +185,7 @@ final class BlockTranslator{
 	public static function loadFromProtocolId(int $protocolId) : BlockTranslator{
 		$canonicalBlockStatesRaw = Filesystem::fileGetContents(str_replace(".nbt", self::PATHS[$protocolId][self::CANONICAL_BLOCK_STATES_PATH] . ".nbt", BedrockDataFiles::CANONICAL_BLOCK_STATES_NBT));
 		$metaMappingRaw = Filesystem::fileGetContents(str_replace(".json", self::PATHS[$protocolId][self::BLOCK_STATE_META_MAP_PATH] . ".json", BedrockDataFiles::BLOCK_STATE_META_MAP_JSON));
-		$dictionary = $protocolId >= ProtocolInfo::PROTOCOL_1_26_40 ?
-			BlockStateDictionary::loadFromHashedString(Filesystem::fileGetContents(RESOURCE_PATH . "bedrock/block_palette-1.26.45.nbt"), $metaMappingRaw) :
-			BlockStateDictionary::loadFromString($canonicalBlockStatesRaw, $metaMappingRaw);
+		$dictionary = BlockStateDictionary::loadFromString($canonicalBlockStatesRaw, $metaMappingRaw);
 		return new self(
 			$dictionary,
 			GlobalBlockStateHandlers::getSerializer(),
