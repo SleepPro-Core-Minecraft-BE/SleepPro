@@ -95,21 +95,40 @@ class FireworkRocket extends Item{
 	public function onInteractBlock(Player $player, Block $blockReplace, Block $blockClicked, int $face, Vector3 $clickVector, array &$returnedItems) : ItemUseResult{
 		//TODO: this would be nicer if Vector3::getSide() accepted floats for distance
 		$position = $blockClicked->getPosition()->addVector($clickVector)->addVector(Vector3::zero()->getSide($face)->multiply(0.15));
-
-		$randomDuration = (($this->flightTimeMultiplier + 1) * 10) + mt_rand(0, 12);
-
-		$entity = new FireworkEntity(Location::fromObject($position, $player->getWorld(), Utils::getRandomFloat() * 360, 90), $randomDuration, $this->explosions);
-		$entity->setOwningEntity($player);
-		$entity->setMotion(new Vector3(
+		$this->launch($player, $position, new Vector3(
 			(Utils::getRandomFloat() - Utils::getRandomFloat()) * 0.0023,
 			0.05,
 			(Utils::getRandomFloat() - Utils::getRandomFloat()) * 0.0023
 		));
-		$entity->spawnToAll();
-
 		$this->pop();
 
 		return ItemUseResult::SUCCESS;
+	}
+
+	public function onClickAir(Player $player, Vector3 $directionVector, array &$returnedItems) : ItemUseResult{
+		if(!$player->isGliding()){
+			return ItemUseResult::NONE;
+		}
+
+		$currentMotion = $player->getMotion();
+		$boostedMotion = $currentMotion->multiply(0.5)->addVector($directionVector->multiply(0.85));
+		$player->setMotion($boostedMotion);
+		$this->launch($player, $player->getLocation(), $boostedMotion);
+		$this->pop();
+
+		return ItemUseResult::SUCCESS;
+	}
+
+	private function launch(Player $player, Vector3 $position, Vector3 $motion) : void{
+		$randomDuration = (($this->flightTimeMultiplier + 1) * 10) + mt_rand(0, 12);
+		$entity = new FireworkEntity(
+			Location::fromObject($position, $player->getWorld(), Utils::getRandomFloat() * 360, 90),
+			$randomDuration,
+			$this->explosions
+		);
+		$entity->setOwningEntity($player);
+		$entity->setMotion($motion);
+		$entity->spawnToAll();
 	}
 
 	protected function deserializeCompoundTag(CompoundTag $tag) : void{
