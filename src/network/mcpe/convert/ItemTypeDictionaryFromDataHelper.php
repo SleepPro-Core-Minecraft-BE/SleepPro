@@ -45,6 +45,8 @@ use function str_replace;
 final class ItemTypeDictionaryFromDataHelper{
 
 	private const PATHS = [
+		// Protocol 2169 (1.26.45) did not change the item registry from protocol
+		// 2168 (1.26.44). Both intentionally share the current dictionary.
 		ProtocolInfo::CURRENT_PROTOCOL => "",
 		ProtocolInfo::PROTOCOL_1_26_44 => "",
 		ProtocolInfo::PROTOCOL_1_26_40 => "",

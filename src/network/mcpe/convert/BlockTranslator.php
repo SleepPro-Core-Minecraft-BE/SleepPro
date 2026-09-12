@@ -42,6 +42,9 @@ final class BlockTranslator{
 	public const BLOCK_STATE_META_MAP_PATH = 1;
 
 	private const PATHS = [
+		// 1.26.45 is a protocol-only update. Mojang did not change the block palette
+		// between protocols 2168 and 2169, so both versions intentionally use the
+		// current (unsuffixed) palette captured for 1.26.44.
 		ProtocolInfo::CURRENT_PROTOCOL => [
 			self::CANONICAL_BLOCK_STATES_PATH => '',
 			self::BLOCK_STATE_META_MAP_PATH => '',
