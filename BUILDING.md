@@ -5,7 +5,7 @@
 
 ```sh
 composer install --no-dev --prefer-dist
-php -d phar.readonly=0 build/server-phar.php --out=SleepPro-0.1-PUBLIC.phar
+php -d phar.readonly=0 build/server-phar.php --out=SleepPro-0.3-PUBLIC.phar
 ./start.sh -p /path/to/compatible/php
 ```
 

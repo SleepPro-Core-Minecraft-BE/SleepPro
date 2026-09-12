@@ -7,7 +7,7 @@ use pocketmine\network\mcpe\convert\ItemTypeDictionaryFromDataHelper;
 use pocketmine\network\mcpe\convert\ItemTranslator;
 use pocketmine\network\mcpe\convert\TypeConverter;
 use pocketmine\network\mcpe\protocol\ProtocolInfo;
-if(VersionInfo::BASE_VERSION !== '5.44.2' || VersionInfo::PUBLIC_VERSION !== '0.1-PUBLIC'){
+if(VersionInfo::BASE_VERSION !== '5.44.2' || VersionInfo::PUBLIC_VERSION !== '0.3-PUBLIC'){
     throw new RuntimeException('Unexpected API or product version');
 }
 foreach(ProtocolInfo::ACCEPTED_PROTOCOL as $protocol){

@@ -49,6 +49,7 @@ namespace pocketmine {
 	use function preg_quote;
 	use function printf;
 	use function realpath;
+	use function str_repeat;
 	use function version_compare;
 	use const DIRECTORY_SEPARATOR;
 	use const PHP_EOL;
@@ -272,7 +273,9 @@ JIT_WARNING
 		if($composerGitHash !== null){
 			//we can't verify dependency versions if we were installed without using git
 			$currentGitHash = explode("-", VersionInfo::GIT_HASH(), 2)[0];
-			if($currentGitHash !== $composerGitHash){
+			//A zero hash means that this is an unversioned build without Git metadata.
+			//In that case there is no reliable revision to compare against Composer's reference.
+			if($currentGitHash !== str_repeat("0", 40) && $currentGitHash !== $composerGitHash){
 				critical_error("Composer dependencies and/or autoloader are out of sync.");
 				critical_error("- Current revision is $currentGitHash");
 				critical_error("- Composer dependencies were last synchronized for revision $composerGitHash");

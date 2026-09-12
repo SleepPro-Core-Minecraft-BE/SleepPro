@@ -161,7 +161,7 @@ function main() : void{
 		}
 		$pharPath = $opts["out"];
 	}else{
-		$pharPath = getcwd() . DIRECTORY_SEPARATOR . "SleepPro-0.2-Public.phar";
+		$pharPath = getcwd() . DIRECTORY_SEPARATOR . "SleepPro-0.3-PUBLIC.phar";
 	}
 	foreach(buildPhar(
 		$pharPath,

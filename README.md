@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/SleepPro-Core-Minecraft-BE/SleepPro"><img src="https://img.shields.io/badge/SleepPro-0.1--PUBLIC-f0ad4e" alt="SleepPro 0.1-PUBLIC"></a>
+  <a href="https://github.com/SleepPro-Core-Minecraft-BE/SleepPro"><img src="https://img.shields.io/badge/SleepPro-0.3--PUBLIC-f0ad4e" alt="SleepPro 0.3-PUBLIC"></a>
   <img src="https://img.shields.io/badge/API-5.44.2-blue" alt="API 5.44.2">
   <img src="https://img.shields.io/badge/Bedrock-1.20.0--1.26.45-brightgreen" alt="Minecraft Bedrock 1.20.0–1.26.45">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-LGPL--3.0-lightgrey" alt="LGPL-3.0"></a>
@@ -18,8 +18,8 @@ PUBLIC-сборка на основе NetherGamesMC/PocketMine-MP. Здесь т
 изменения партнёрской сборки не включены. PUBLIC не является ванильным сервером.
 
 - API плагинов: `5.44.2`; пространства имён `pocketmine` сохранены для совместимости.
-- Версия продукта: `0.1-PUBLIC`.
-- Файл сборки: `SleepPro-0.1-PUBLIC.phar`.
+- Версия продукта: `0.3-PUBLIC`.
+- Файл сборки: `SleepPro-0.3-PUBLIC.phar`.
 - Основной конфиг: `settings.yml`.
 
 Сетевая библиотека: `kostamax27/BedrockProtocol-NG`, commit `d29c470f71`;

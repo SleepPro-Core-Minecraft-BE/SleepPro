@@ -21,10 +21,10 @@ if($php -ne ""){
 }
 
 if($file -eq ""){
-	if(Test-Path "SleepPro-0.1-PUBLIC.phar"){
-	    $file = "SleepPro-0.1-PUBLIC.phar"
+	if(Test-Path "SleepPro-0.3-PUBLIC.phar"){
+	    $file = "SleepPro-0.3-PUBLIC.phar"
 	}else{
-	    echo "SleepPro-0.1-PUBLIC.phar not found"
+	    echo "SleepPro-0.3-PUBLIC.phar not found"
 	    echo "Downloads can be found at https://vk.com/sleepwpro"
 	    pause
 	    exit 1
