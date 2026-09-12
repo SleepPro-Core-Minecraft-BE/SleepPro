@@ -975,7 +975,10 @@ class NetworkSession{
 		$checkXUID = $this->server->getConfigGroup()->getPropertyBool(YmlServerProperties::PLAYER_VERIFY_XUID, true);
 		$myXUID = $this->info instanceof XboxLivePlayerInfo ? $this->info->getXuid() : "";
 		$kickForXUIDMismatch = function(string $xuid) use ($checkXUID, $myXUID) : bool{
-			if($checkXUID && $myXUID !== $xuid){
+			// Recent Bedrock authentication flows don't always expose an XUID when
+			// authentication is optional. An unknown identity must not be treated as
+			// a changed identity; compare only two actual XUID values.
+			if($checkXUID && $myXUID !== "" && $xuid !== "" && $myXUID !== $xuid){
 				$this->logger->debug("XUID mismatch: expected '$xuid', but got '$myXUID'");
 				//TODO: Longer term, we should be identifying playerdata using something more reliable, like XUID or UUID.
 				//However, that would be a very disruptive change, so this will serve as a stopgap for now.
@@ -1014,6 +1017,8 @@ class NetworkSession{
 			$recordedXUID = $this->cachedOfflinePlayerData !== null ? $this->cachedOfflinePlayerData->getTag(Player::TAG_LAST_KNOWN_XUID) : null;
 			if(!($recordedXUID instanceof StringTag)){
 				$this->logger->debug("No previous XUID recorded, no choice but to trust this player");
+			}elseif($myXUID === ""){
+				$this->logger->debug("Current authentication flow did not provide an XUID; preserving the previously recorded identity");
 			}elseif(!$kickForXUIDMismatch($recordedXUID->getValue())){
 				$this->logger->debug("XUID match");
 			}
