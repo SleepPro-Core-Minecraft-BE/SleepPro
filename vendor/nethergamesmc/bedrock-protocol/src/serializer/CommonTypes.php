@@ -510,22 +510,16 @@ final class CommonTypes{
 			return self::readItemDescriptorMess($in, $protocolId);
 		}
 
-		$hasDescriptor = VarInt::readUnsignedInt($in);
-		if($hasDescriptor === 0){
-			$meta = VarInt::readSignedInt($in);
-			if($meta !== 32767){
-				throw new PacketDecodeException("Expected meta 32767 for empty item descriptor, got $meta");
-			}
-			return null;
-		}
-		if($hasDescriptor !== 1){
-			throw new PacketDecodeException("Expected 0 or 1 for item descriptor variant, got $hasDescriptor");
+		$descriptorTypeOrd = VarInt::readUnsignedInt($in);
+		$innerTypeOrd = Byte::readUnsigned($in);
+		if($descriptorTypeOrd !== $innerTypeOrd){
+			throw new PacketDecodeException("Item descriptor type mismatch: outer type $descriptorTypeOrd, inner type $innerTypeOrd");
 		}
 
-		$descriptorType = ItemDescriptorType::fromPacket(self::getString($in));
+		$descriptorType = ItemDescriptorType::fromOrdinal($descriptorTypeOrd);
 		return match($descriptorType){
 			ItemDescriptorType::STRING_ID_META => StringIdMetaItemDescriptor::read($in, $protocolId),
-			ItemDescriptorType::TAG => TagItemDescriptor::read($in, $protocolId),
+			ItemDescriptorType::TAG => TagItemDescriptor::readTagOnly($in),
 			ItemDescriptorType::MOLANG => MolangItemDescriptor::read($in, $protocolId),
 			ItemDescriptorType::EMPTY => null,
 			ItemDescriptorType::INT_ID_META,
@@ -543,10 +537,48 @@ final class CommonTypes{
 		if($descriptorType === ItemDescriptorType::INT_ID_META || $descriptorType === ItemDescriptorType::COMPLEX_ALIAS){
 			throw new \InvalidArgumentException("Item descriptor type " . $descriptorType->value . " cannot be sent since 1.26.40");
 		}
+		$typeOrd = $descriptorType->toOrdinal();
+		VarInt::writeUnsignedInt($out, $typeOrd);
+		Byte::writeUnsigned($out, $typeOrd);
+		if($descriptor instanceof TagItemDescriptor){
+			$descriptor->writeTagOnly($out);
+		}else{
+			$descriptor?->write($out, $protocolId);
+		}
+	}
+
+	private static function readCraftingRecipeDescriptor(ByteBufferReader $in, int $protocolId) : StringIdMetaItemDescriptor|TagItemDescriptor|MolangItemDescriptor|null{
+		$hasDescriptor = VarInt::readUnsignedInt($in);
+		if($hasDescriptor === 0){
+			$meta = VarInt::readSignedInt($in);
+			if($meta !== 32767){
+				throw new PacketDecodeException("Expected meta 32767 for empty recipe descriptor, got $meta");
+			}
+			return null;
+		}
+		if($hasDescriptor !== 1){
+			throw new PacketDecodeException("Expected 0 or 1 for recipe descriptor variant, got $hasDescriptor");
+		}
+
+		$descriptorType = ItemDescriptorType::fromPacket(self::getString($in));
+		return match($descriptorType){
+			ItemDescriptorType::STRING_ID_META => StringIdMetaItemDescriptor::read($in, $protocolId),
+			ItemDescriptorType::TAG => TagItemDescriptor::read($in, $protocolId),
+			ItemDescriptorType::MOLANG => MolangItemDescriptor::read($in, $protocolId),
+			ItemDescriptorType::EMPTY => null,
+			default => throw new PacketDecodeException("Unsupported crafting recipe descriptor type " . $descriptorType->value),
+		};
+	}
+
+	private static function writeCraftingRecipeDescriptor(ByteBufferWriter $out, int $protocolId, StringIdMetaItemDescriptor|TagItemDescriptor|MolangItemDescriptor|IntIdMetaItemDescriptor|ComplexAliasItemDescriptor|null $descriptor) : void{
 		if($descriptor === null){
 			VarInt::writeUnsignedInt($out, 0);
 			VarInt::writeSignedInt($out, 32767);
 			return;
+		}
+		$descriptorType = $descriptor->getDescriptorType();
+		if($descriptorType === ItemDescriptorType::INT_ID_META || $descriptorType === ItemDescriptorType::COMPLEX_ALIAS){
+			throw new \InvalidArgumentException("Item descriptor type " . $descriptorType->value . " cannot be used in a crafting recipe since 1.26.40");
 		}
 
 		VarInt::writeUnsignedInt($out, 1);
@@ -625,7 +657,7 @@ final class CommonTypes{
 			// CraftingDataPacket was converted to Cereal in 1.26.40. Recipe
 			// ingredient counts remain signed VarInts; only stack-request
 			// ingredients use the newer unsigned 16-bit representation.
-			$descriptor = self::readItemDescriptorNormal($in, $protocolId);
+			$descriptor = self::readCraftingRecipeDescriptor($in, $protocolId);
 			$count = VarInt::readSignedInt($in);
 		}else{
 			$descriptor = self::readItemDescriptorMess($in, $protocolId);
@@ -637,7 +669,7 @@ final class CommonTypes{
 
 	public static function putRecipeIngredient(ByteBufferWriter $out, int $protocolId, RecipeIngredient $ingredient) : void{
 		if($protocolId >= ProtocolInfo::PROTOCOL_1_26_40){
-			self::writeItemDescriptorNormal($out, $protocolId, $ingredient->getDescriptor());
+			self::writeCraftingRecipeDescriptor($out, $protocolId, $ingredient->getDescriptor());
 			VarInt::writeSignedInt($out, $ingredient->getCount());
 		}else{
 			self::writeItemDescriptorMess($out, $protocolId, $ingredient->getDescriptor());
