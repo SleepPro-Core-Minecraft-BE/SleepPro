@@ -1985,12 +1985,7 @@ class Player extends Human implements CommandSender, ChunkListener, IPlayer, Nev
 		$heldItem = $this->inventory->getItemInHand();
 		$oldItem = clone $heldItem;
 
-		$baseDamage = $heldItem->getAttackPoints();
-		$isMaceSmash = $heldItem instanceof \pocketmine\item\Mace && ($smashBonus = $heldItem->getSmashDamageBonus($this->fallDistance)) > 0.0;
-		if($isMaceSmash){
-			$baseDamage += $smashBonus;
-		}
-		$ev = new EntityDamageByEntityEvent($this, $entity, EntityDamageEvent::CAUSE_ENTITY_ATTACK, $baseDamage);
+		$ev = new EntityDamageByEntityEvent($this, $entity, EntityDamageEvent::CAUSE_ENTITY_ATTACK, $heldItem->getAttackPoints());
 		if(!$this->canInteract($entity->getLocation(), self::MAX_REACH_DISTANCE_ENTITY_INTERACTION)){
 			$this->logger->debug("Cancelled attack of entity " . $entity->getId() . " due to not currently being interactable");
 			$ev->cancel();
@@ -2010,14 +2005,11 @@ class Player extends Human implements CommandSender, ChunkListener, IPlayer, Nev
 		}
 		$ev->setModifier($meleeEnchantmentDamage, EntityDamageEvent::MODIFIER_WEAPON_ENCHANTMENTS);
 
-		if(!$isMaceSmash && !$this->isSprinting() && !$this->isFlying() && $this->fallDistance > 0 && !$this->effectManager->has(VanillaEffects::BLINDNESS()) && !$this->isUnderwater()){
+		if(!$this->isSprinting() && !$this->isFlying() && $this->fallDistance > 0 && !$this->effectManager->has(VanillaEffects::BLINDNESS()) && !$this->isUnderwater()){
 			$ev->setModifier($ev->getFinalDamage() / 2, EntityDamageEvent::MODIFIER_CRITICAL);
 		}
 
 		$entity->attack($ev);
-		if($isMaceSmash && !$ev->isCancelled()){
-			$this->resetFallDistance();
-		}
 		$this->broadcastAnimation(new ArmSwingAnimation($this), $this->getViewers());
 
 		$soundPos = $entity->getPosition()->add(0, $entity->size->getHeight() / 2, 0);
