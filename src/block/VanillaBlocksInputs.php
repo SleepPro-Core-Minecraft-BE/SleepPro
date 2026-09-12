@@ -158,7 +158,7 @@ final class VanillaBlocksInputs extends RegistrySource{
 		self::register("bedrock", fn(BID $id) => new Bedrock($id, "Bedrock", new Info(BreakInfo::indestructible(18000000.0))));
 
 		self::register("beetroots", fn(BID $id) => new Beetroot($id, "Beetroot Block", new Info(BreakInfo::instant())));
-		self::register("beehive", fn(BID $id) => new Beehive($id, "Beehive", new Info(BreakInfo::axe(0.6))));
+		self::register("beehive", fn(BID $id) => new Opaque($id, "Beehive", new Info(BreakInfo::axe(0.6))));
 		self::register("bell", fn(BID $id) => new Bell($id, "Bell", new Info(BreakInfo::pickaxe(5.0))), TileBell::class);
 		self::register("blue_ice", fn(BID $id) => new BlueIce($id, "Blue Ice", new Info(BreakInfo::pickaxe(2.8))));
 		self::register("bone_block", fn(BID $id) => new BoneBlock($id, "Bone Block", new Info(BreakInfo::pickaxe(2.0, ToolTier::WOOD))));
@@ -189,8 +189,8 @@ final class VanillaBlocksInputs extends RegistrySource{
 		$cobblestone = self::register("cobblestone", fn(BID $id) => new Opaque($id, "Cobblestone", $cobblestoneBreakInfo));
 		self::register("moss_block", fn(BID $id) => new Opaque($id, "Moss Block", new Info(new BreakInfo(0.1, ToolType::HOE))));
 		self::register("moss_carpet", fn(BID $id) => new MossCarpet($id, "Moss Carpet", new Info(new BreakInfo(0.1, ToolType::HOE))));
-		self::register("composter", fn(BID $id) => new Composter($id, "Composter", new Info(BreakInfo::axe(0.6))));
-		self::register("scaffolding", fn(BID $id) => new Scaffolding($id, "Scaffolding", new Info(new BreakInfo(0.0, ToolType::AXE))));
+		self::register("composter", fn(BID $id) => new Transparent($id, "Composter", new Info(BreakInfo::axe(0.6))));
+		self::register("scaffolding", fn(BID $id) => new Transparent($id, "Scaffolding", new Info(new BreakInfo(0.0, ToolType::AXE))));
 		self::register("mossy_cobblestone", fn(BID $id) => new Opaque($id, "Mossy Cobblestone", $cobblestoneBreakInfo));
 		self::register("cobblestone_stairs", fn(BID $id) => new Stair($id, "Cobblestone Stairs", $cobblestoneBreakInfo));
 		self::register("mossy_cobblestone_stairs", fn(BID $id) => new Stair($id, "Mossy Cobblestone Stairs", $cobblestoneBreakInfo));
