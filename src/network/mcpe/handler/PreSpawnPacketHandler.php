@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\handler;
 
+use pocketmine\custom\block\CustomBlockRegistry;
+
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\network\mcpe\cache\CraftingDataCache;
 use pocketmine\network\mcpe\cache\StaticPacketCache;
@@ -34,6 +36,9 @@ use pocketmine\network\mcpe\protocol\ProtocolInfo;
 use pocketmine\network\mcpe\protocol\RequestChunkRadiusPacket;
 use pocketmine\network\mcpe\protocol\ServerboundLoadingScreenPacket;
 use pocketmine\network\mcpe\protocol\StartGamePacket;
+use pocketmine\network\mcpe\protocol\TrimDataPacket;
+use pocketmine\network\mcpe\protocol\UnlockedRecipesPacket;
+use pocketmine\network\mcpe\protocol\VoxelShapesPacket;
 use pocketmine\network\mcpe\protocol\types\BlockPosition;
 use pocketmine\network\mcpe\protocol\types\BoolGameRule;
 use pocketmine\network\mcpe\protocol\types\CacheableNbt;
@@ -45,11 +50,17 @@ use pocketmine\network\mcpe\protocol\types\PlayerMovementSettings;
 use pocketmine\network\mcpe\protocol\types\ServerAuthMovementMode;
 use pocketmine\network\mcpe\protocol\types\ServerTelemetryData;
 use pocketmine\network\mcpe\protocol\types\SpawnSettings;
+use pocketmine\network\mcpe\protocol\types\TrimMaterial;
+use pocketmine\network\mcpe\protocol\types\TrimPattern;
 use pocketmine\player\Player;
 use pocketmine\Server;
 use pocketmine\timings\Timings;
 use pocketmine\VersionInfo;
 use Ramsey\Uuid\Uuid;
+use function array_map;
+use function array_unique;
+use function array_values;
+use function count;
 use function sprintf;
 
 /**
@@ -74,6 +85,11 @@ class PreSpawnPacketHandler extends PacketHandler{
 
 			$typeConverter = $this->session->getTypeConverter();
 
+			if($protocolId >= ProtocolInfo::PROTOCOL_1_26_40){
+				$this->session->getLogger()->debug("Sending voxel shapes");
+				$this->session->sendDataPacket(VoxelShapesPacket::create([], [], 0), true);
+			}
+
 			$this->session->getLogger()->debug("Preparing StartGamePacket");
 			$levelSettings = new LevelSettings();
 			$levelSettings->seed = -1;
@@ -91,7 +107,11 @@ class PreSpawnPacketHandler extends PacketHandler{
 				"naturalregeneration" => new BoolGameRule(false, false), //Hack for client side regeneration
 				"locatorbar" => new BoolGameRule(false, false) //Disable client-side tracking of nearby players
 			];
-			$levelSettings->experiments = new Experiments([], false);
+			$customBlocksEnabled = CustomBlockRegistry::getInstance()->hasRegisteredBlocks();
+			$levelSettings->experiments = new Experiments(
+				$customBlocksEnabled ? ["data_driven_items" => true] : [],
+				$customBlocksEnabled
+			);
 
 			$this->session->sendDataPacket(StartGamePacket::create(
 				$this->player->getId(),
@@ -111,7 +131,7 @@ class PreSpawnPacketHandler extends PacketHandler{
 				0,
 				"",
 				true,
-				sprintf("%s %s", VersionInfo::NAME, VersionInfo::VERSION()->getFullVersion(true)),
+				sprintf("%s %s", VersionInfo::NAME, VersionInfo::PRODUCT_VERSION),
 				Uuid::fromString(Uuid::NIL),
 				false,
 				$this->session->getProtocolId() >= ProtocolInfo::PROTOCOL_1_26_40,
@@ -120,7 +140,7 @@ class PreSpawnPacketHandler extends PacketHandler{
 				true,
 				null,
 				new ServerTelemetryData("", "", "", ""),
-				[],
+				CustomBlockRegistry::getInstance()->getPaletteEntries(),
 				0,
 				$typeConverter->getItemTypeDictionary()->getEntries(),
 			));
@@ -162,7 +182,50 @@ class PreSpawnPacketHandler extends PacketHandler{
 			$this->inventoryManager->syncCreative();
 
 			$this->session->getLogger()->debug("Sending crafting data");
-			$this->session->sendDataPacket(CraftingDataCache::getInstance($protocolId)->getCache($this->server->getCraftingManager()));
+			$craftingData = CraftingDataCache::getInstance($protocolId)->getCache($this->server->getCraftingManager());
+			$this->session->sendDataPacket($craftingData);
+
+			// Smithing recipes don't carry RecipeUnlockingRequirement. Recent Bedrock
+			// clients therefore require their string IDs to be announced explicitly;
+			// otherwise the smithing UI accepts the inputs but never displays a result.
+			$smithingRecipeIds = [];
+			foreach($craftingData->smithingTransformRecipes as $recipe){
+				$smithingRecipeIds[] = $recipe->getRecipeId();
+			}
+			foreach($craftingData->smithingTrimRecipes as $recipe){
+				$smithingRecipeIds[] = $recipe->getRecipeId();
+			}
+			if(count($smithingRecipeIds) > 0){
+				$this->session->getLogger()->debug("Unlocking " . count($smithingRecipeIds) . " smithing recipes");
+				$this->session->sendDataPacket(UnlockedRecipesPacket::create(
+					UnlockedRecipesPacket::TYPE_INITIALLY_UNLOCKED,
+					array_values(array_unique($smithingRecipeIds))
+				));
+			}
+
+			$this->session->getLogger()->debug("Sending armor trim data");
+			$this->session->sendDataPacket(TrimDataPacket::create(
+				array_map(
+					static fn(string $pattern) => new TrimPattern(
+						"minecraft:" . $pattern . "_armor_trim_smithing_template",
+						"minecraft:" . $pattern
+					),
+					["bolt", "coast", "dune", "eye", "flow", "host", "raiser", "rib", "sentry", "shaper", "silence", "snout", "spire", "tide", "vex", "ward", "wayfinder", "wild"]
+				),
+				[
+					new TrimMaterial("minecraft:quartz", "#E3D4D1", "minecraft:quartz"),
+					new TrimMaterial("minecraft:iron", "#CECAC9", "minecraft:iron_ingot"),
+					new TrimMaterial("minecraft:netherite", "#443A3B", "minecraft:netherite_ingot"),
+					new TrimMaterial("minecraft:redstone", "#971607", "minecraft:redstone"),
+					new TrimMaterial("minecraft:copper", "#B4684D", "minecraft:copper_ingot"),
+					new TrimMaterial("minecraft:gold", "#DEB12D", "minecraft:gold_ingot"),
+					new TrimMaterial("minecraft:emerald", "#11A036", "minecraft:emerald"),
+					new TrimMaterial("minecraft:diamond", "#2CBBAA", "minecraft:diamond"),
+					new TrimMaterial("minecraft:lapis", "#21497B", "minecraft:lapis_lazuli"),
+					new TrimMaterial("minecraft:amethyst", "#9A5CC6", "minecraft:amethyst_shard"),
+					new TrimMaterial("minecraft:resin", "#EB7214", "minecraft:resin_brick"),
+				]
+			));
 
 			$this->session->getLogger()->debug("Sending player list");
 			$this->session->syncPlayerList($this->server->getOnlinePlayers());
