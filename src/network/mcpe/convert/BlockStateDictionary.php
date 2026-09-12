@@ -25,7 +25,9 @@ namespace pocketmine\network\mcpe\convert;
 
 use pocketmine\data\bedrock\block\BlockStateData;
 use pocketmine\data\bedrock\block\BlockTypeNames;
+use pocketmine\nbt\BigEndianNbtSerializer;
 use pocketmine\nbt\NbtDataException;
+use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\TreeRoot;
 use pocketmine\network\mcpe\protocol\serializer\NetworkNbtSerializer;
 use pocketmine\utils\Utils;
@@ -38,6 +40,7 @@ use function is_array;
 use function is_int;
 use function is_string;
 use function json_decode;
+use function zlib_decode;
 use const JSON_THROW_ON_ERROR;
 
 /**
@@ -217,5 +220,58 @@ final class BlockStateDictionary{
 		}
 
 		return new self($entries);
+	}
+
+	/**
+	 * Loads the hashed runtime IDs used by Bedrock 1.26.40 and newer.
+	 * The palette is the gzipped big-endian NBT emitted by BDS.
+	 */
+	public static function loadFromHashedString(string $blockPaletteContents, string $metaMapContents) : self{
+		$paletteRaw = zlib_decode($blockPaletteContents);
+		if($paletteRaw === false){
+			throw new \InvalidArgumentException("Failed to decompress hashed block palette");
+		}
+		$blocks = (new BigEndianNbtSerializer())->read($paletteRaw)->mustGetCompoundTag()->getListTag("blocks") ??
+			throw new \InvalidArgumentException("Missing blocks list in hashed block palette");
+		$metaMap = json_decode($metaMapContents, flags: JSON_THROW_ON_ERROR);
+		if(!is_array($metaMap)){
+			throw new \InvalidArgumentException("Invalid metaMap, expected array for root type, got " . get_debug_type($metaMap));
+		}
+
+		$upgrader = GlobalBlockStateHandlers::getUpgrader()->getBlockStateUpgrader();
+		$entries = [];
+		$uniqueNames = [];
+		foreach((new \ReflectionClass(BlockTypeNames::class))->getConstants() as $value){
+			if(is_string($value)){
+				$uniqueNames[$value] = $value;
+			}
+		}
+
+		foreach($blocks as $i => $blockTag){
+			if(!($blockTag instanceof CompoundTag)){
+				throw new \InvalidArgumentException("Invalid hashed palette entry at offset $i");
+			}
+			$meta = $metaMap[$i] ?? null;
+			if(!is_int($meta)){
+				throw new \InvalidArgumentException("Missing or invalid meta value for hashed state $i");
+			}
+			$states = $blockTag->getCompoundTag(BlockStateData::TAG_STATES) ??
+				throw new \InvalidArgumentException("Missing states for hashed palette entry $i");
+			$state = new BlockStateData(
+				$blockTag->getString(BlockStateData::TAG_NAME),
+				$states->getValue(),
+				$blockTag->getInt(BlockStateData::TAG_VERSION)
+			);
+			$newState = $upgrader->upgrade($state);
+			$name = $uniqueNames[$newState->getName()] ??= $newState->getName();
+			$entries[$blockTag->getInt("network_id")] = new BlockStateDictionaryEntry(
+				$name,
+				$newState->getStates(),
+				$meta,
+				$newState->equals($state) ? null : $state
+			);
+		}
+
+		return new self(CustomBlockRegistry::getInstance()->appendNetworkStates($entries));
 	}
 }

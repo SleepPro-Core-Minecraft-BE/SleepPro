@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
+use pocketmine\data\bedrock\block\BlockStateData;
+use pocketmine\data\bedrock\block\BlockTypeNames;
 use pocketmine\network\mcpe\convert\BlockTranslator;
 use pocketmine\network\mcpe\convert\ItemTypeDictionaryFromDataHelper;
 use pocketmine\network\mcpe\protocol\ProtocolInfo;
@@ -23,7 +25,7 @@ foreach(ProtocolInfo::ACCEPTED_PROTOCOL as $protocolId){
 	if(count($itemDictionary->getEntries()) === 0){
 		throw new RuntimeException("Protocol $protocolId has an empty item dictionary");
 	}
-	if($blockTranslator->getBlockStateDictionary()->generateDataFromStateId(0) === null){
+	if(count($blockTranslator->getBlockStateDictionary()->getStates()) === 0){
 		throw new RuntimeException("Protocol $protocolId has an empty or invalid block palette");
 	}
 }
@@ -42,12 +44,15 @@ $palette44 = BlockTranslator::loadFromProtocolId(ProtocolInfo::PROTOCOL_1_26_44)
 $palette45 = BlockTranslator::loadFromProtocolId(ProtocolInfo::PROTOCOL_1_26_45);
 $items44 = ItemTypeDictionaryFromDataHelper::loadFromProtocolId(ProtocolInfo::PROTOCOL_1_26_44);
 $items45 = ItemTypeDictionaryFromDataHelper::loadFromProtocolId(ProtocolInfo::PROTOCOL_1_26_45);
+$expectedAirNetworkId = -604749536;
 
 if(
 	count($items44->getEntries()) !== count($items45->getEntries()) ||
-	$palette44->getBlockStateDictionary()->generateDataFromStateId(0) != $palette45->getBlockStateDictionary()->generateDataFromStateId(0)
+	count($palette44->getBlockStateDictionary()->getStates()) !== count($palette45->getBlockStateDictionary()->getStates()) ||
+	$palette44->getBlockStateDictionary()->lookupStateIdFromData(BlockStateData::current(BlockTypeNames::AIR, [])) !== $expectedAirNetworkId ||
+	$palette45->getBlockStateDictionary()->lookupStateIdFromData(BlockStateData::current(BlockTypeNames::AIR, [])) !== $expectedAirNetworkId
 ){
-	throw new RuntimeException('Minecraft 1.26.44 and 1.26.45 must use the same Bedrock registries');
+	throw new RuntimeException('Minecraft 1.26.44 and 1.26.45 must use the same hashed Bedrock registries');
 }
 
 printf(

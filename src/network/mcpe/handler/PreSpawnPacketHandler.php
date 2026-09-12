@@ -114,7 +114,7 @@ class PreSpawnPacketHandler extends PacketHandler{
 				sprintf("%s %s", VersionInfo::NAME, VersionInfo::VERSION()->getFullVersion(true)),
 				Uuid::fromString(Uuid::NIL),
 				false,
-				false,
+				$this->session->getProtocolId() >= ProtocolInfo::PROTOCOL_1_26_40,
 				false,
 				new NetworkPermissions(disableClientSounds: true),
 				true,
