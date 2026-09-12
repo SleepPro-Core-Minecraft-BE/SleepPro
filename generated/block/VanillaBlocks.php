@@ -98,7 +98,6 @@ final class VanillaBlocks{
 	private static Beacon $_mBEACON;
 	private static Bed $_mBED;
 	private static Bedrock $_mBEDROCK;
-	private static Opaque $_mBEEHIVE;
 	private static Beetroot $_mBEETROOTS;
 	private static Bell $_mBELL;
 	private static BigDripleafHead $_mBIG_DRIPLEAF_HEAD;
@@ -200,7 +199,6 @@ final class VanillaBlocks{
 	private static Wall $_mCOBBLESTONE_WALL;
 	private static Cobweb $_mCOBWEB;
 	private static CocoaBlock $_mCOCOA_POD;
-	private static Transparent $_mCOMPOSTER;
 	private static ChemistryTable $_mCOMPOUND_CREATOR;
 	private static Concrete $_mCONCRETE;
 	private static ConcretePowder $_mCONCRETE_POWDER;
@@ -430,7 +428,6 @@ final class VanillaBlocks{
 	private static EmeraldOre $_mEMERALD_ORE;
 	private static EnchantingTable $_mENCHANTING_TABLE;
 	private static EnderChest $_mENDER_CHEST;
-	private static Transparent $_mEND_PORTAL;
 	private static EndPortalFrame $_mEND_PORTAL_FRAME;
 	private static EndRod $_mEND_ROD;
 	private static Opaque $_mEND_STONE;
@@ -561,7 +558,6 @@ final class VanillaBlocks{
 	private static Stair $_mMOSSY_STONE_BRICK_STAIRS;
 	private static Wall $_mMOSSY_STONE_BRICK_WALL;
 	private static Opaque $_mMOSS_BLOCK;
-	private static MossCarpet $_mMOSS_CARPET;
 	private static Opaque $_mMUD;
 	private static SimplePillar $_mMUDDY_MANGROVE_ROOTS;
 	private static Opaque $_mMUD_BRICKS;
@@ -723,7 +719,6 @@ final class VanillaBlocks{
 	private static Slab $_mSANDSTONE_SLAB;
 	private static Stair $_mSANDSTONE_STAIRS;
 	private static Wall $_mSANDSTONE_WALL;
-	private static Transparent $_mSCAFFOLDING;
 	private static Sculk $_mSCULK;
 	private static SeaLantern $_mSEA_LANTERN;
 	private static SeaPickle $_mSEA_PICKLE;
@@ -937,7 +932,6 @@ final class VanillaBlocks{
 			"beacon" => fn(Beacon $v) => self::$_mBEACON = $v,
 			"bed" => fn(Bed $v) => self::$_mBED = $v,
 			"bedrock" => fn(Bedrock $v) => self::$_mBEDROCK = $v,
-			"beehive" => fn(Opaque $v) => self::$_mBEEHIVE = $v,
 			"beetroots" => fn(Beetroot $v) => self::$_mBEETROOTS = $v,
 			"bell" => fn(Bell $v) => self::$_mBELL = $v,
 			"big_dripleaf_head" => fn(BigDripleafHead $v) => self::$_mBIG_DRIPLEAF_HEAD = $v,
@@ -1039,7 +1033,6 @@ final class VanillaBlocks{
 			"cobblestone_wall" => fn(Wall $v) => self::$_mCOBBLESTONE_WALL = $v,
 			"cobweb" => fn(Cobweb $v) => self::$_mCOBWEB = $v,
 			"cocoa_pod" => fn(CocoaBlock $v) => self::$_mCOCOA_POD = $v,
-			"composter" => fn(Transparent $v) => self::$_mCOMPOSTER = $v,
 			"compound_creator" => fn(ChemistryTable $v) => self::$_mCOMPOUND_CREATOR = $v,
 			"concrete" => fn(Concrete $v) => self::$_mCONCRETE = $v,
 			"concrete_powder" => fn(ConcretePowder $v) => self::$_mCONCRETE_POWDER = $v,
@@ -1269,7 +1262,6 @@ final class VanillaBlocks{
 			"emerald_ore" => fn(EmeraldOre $v) => self::$_mEMERALD_ORE = $v,
 			"enchanting_table" => fn(EnchantingTable $v) => self::$_mENCHANTING_TABLE = $v,
 			"ender_chest" => fn(EnderChest $v) => self::$_mENDER_CHEST = $v,
-			"end_portal" => fn(Transparent $v) => self::$_mEND_PORTAL = $v,
 			"end_portal_frame" => fn(EndPortalFrame $v) => self::$_mEND_PORTAL_FRAME = $v,
 			"end_rod" => fn(EndRod $v) => self::$_mEND_ROD = $v,
 			"end_stone" => fn(Opaque $v) => self::$_mEND_STONE = $v,
@@ -1400,7 +1392,6 @@ final class VanillaBlocks{
 			"mossy_stone_brick_stairs" => fn(Stair $v) => self::$_mMOSSY_STONE_BRICK_STAIRS = $v,
 			"mossy_stone_brick_wall" => fn(Wall $v) => self::$_mMOSSY_STONE_BRICK_WALL = $v,
 			"moss_block" => fn(Opaque $v) => self::$_mMOSS_BLOCK = $v,
-			"moss_carpet" => fn(MossCarpet $v) => self::$_mMOSS_CARPET = $v,
 			"mud" => fn(Opaque $v) => self::$_mMUD = $v,
 			"muddy_mangrove_roots" => fn(SimplePillar $v) => self::$_mMUDDY_MANGROVE_ROOTS = $v,
 			"mud_bricks" => fn(Opaque $v) => self::$_mMUD_BRICKS = $v,
@@ -1562,7 +1553,6 @@ final class VanillaBlocks{
 			"sandstone_slab" => fn(Slab $v) => self::$_mSANDSTONE_SLAB = $v,
 			"sandstone_stairs" => fn(Stair $v) => self::$_mSANDSTONE_STAIRS = $v,
 			"sandstone_wall" => fn(Wall $v) => self::$_mSANDSTONE_WALL = $v,
-			"scaffolding" => fn(Transparent $v) => self::$_mSCAFFOLDING = $v,
 			"sculk" => fn(Sculk $v) => self::$_mSCULK = $v,
 			"sea_lantern" => fn(SeaLantern $v) => self::$_mSEA_LANTERN = $v,
 			"sea_pickle" => fn(SeaPickle $v) => self::$_mSEA_PICKLE = $v,
@@ -2018,11 +2008,6 @@ final class VanillaBlocks{
 	public static function BEDROCK() : Bedrock{
 		if(!isset(self::$_mBEDROCK)){ self::init(); }
 		return clone self::$_mBEDROCK;
-	}
-
-	public static function BEEHIVE() : Opaque{
-		if(!isset(self::$_mBEEHIVE)){ self::init(); }
-		return clone self::$_mBEEHIVE;
 	}
 
 	public static function BEETROOTS() : Beetroot{
@@ -2528,11 +2513,6 @@ final class VanillaBlocks{
 	public static function COCOA_POD() : CocoaBlock{
 		if(!isset(self::$_mCOCOA_POD)){ self::init(); }
 		return clone self::$_mCOCOA_POD;
-	}
-
-	public static function COMPOSTER() : Transparent{
-		if(!isset(self::$_mCOMPOSTER)){ self::init(); }
-		return clone self::$_mCOMPOSTER;
 	}
 
 	public static function COMPOUND_CREATOR() : ChemistryTable{
@@ -3680,11 +3660,6 @@ final class VanillaBlocks{
 		return clone self::$_mENDER_CHEST;
 	}
 
-	public static function END_PORTAL() : Transparent{
-		if(!isset(self::$_mEND_PORTAL)){ self::init(); }
-		return clone self::$_mEND_PORTAL;
-	}
-
 	public static function END_PORTAL_FRAME() : EndPortalFrame{
 		if(!isset(self::$_mEND_PORTAL_FRAME)){ self::init(); }
 		return clone self::$_mEND_PORTAL_FRAME;
@@ -4333,11 +4308,6 @@ final class VanillaBlocks{
 	public static function MOSS_BLOCK() : Opaque{
 		if(!isset(self::$_mMOSS_BLOCK)){ self::init(); }
 		return clone self::$_mMOSS_BLOCK;
-	}
-
-	public static function MOSS_CARPET() : MossCarpet{
-		if(!isset(self::$_mMOSS_CARPET)){ self::init(); }
-		return clone self::$_mMOSS_CARPET;
 	}
 
 	public static function MUD() : Opaque{
@@ -5143,11 +5113,6 @@ final class VanillaBlocks{
 	public static function SANDSTONE_WALL() : Wall{
 		if(!isset(self::$_mSANDSTONE_WALL)){ self::init(); }
 		return clone self::$_mSANDSTONE_WALL;
-	}
-
-	public static function SCAFFOLDING() : Transparent{
-		if(!isset(self::$_mSCAFFOLDING)){ self::init(); }
-		return clone self::$_mSCAFFOLDING;
 	}
 
 	public static function SCULK() : Sculk{
