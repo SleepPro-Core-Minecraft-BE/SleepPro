@@ -186,7 +186,6 @@ final class VanillaBlocksInputs extends RegistrySource{
 
 		$cobblestoneBreakInfo = new Info(BreakInfo::pickaxe(2.0, ToolTier::WOOD, 30.0));
 		$cobblestone = self::register("cobblestone", fn(BID $id) => new Opaque($id, "Cobblestone", $cobblestoneBreakInfo));
-		self::register("moss_block", fn(BID $id) => new Opaque($id, "Moss Block", new Info(new BreakInfo(0.1, ToolType::HOE))));
 		self::register("mossy_cobblestone", fn(BID $id) => new Opaque($id, "Mossy Cobblestone", $cobblestoneBreakInfo));
 		self::register("cobblestone_stairs", fn(BID $id) => new Stair($id, "Cobblestone Stairs", $cobblestoneBreakInfo));
 		self::register("mossy_cobblestone_stairs", fn(BID $id) => new Stair($id, "Mossy Cobblestone Stairs", $cobblestoneBreakInfo));
