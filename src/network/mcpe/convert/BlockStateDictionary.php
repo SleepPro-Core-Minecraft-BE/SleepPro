@@ -238,7 +238,6 @@ final class BlockStateDictionary{
 			throw new \InvalidArgumentException("Invalid metaMap, expected array for root type, got " . get_debug_type($metaMap));
 		}
 
-		$upgrader = GlobalBlockStateHandlers::getUpgrader()->getBlockStateUpgrader();
 		$entries = [];
 		$uniqueNames = [];
 		foreach((new \ReflectionClass(BlockTypeNames::class))->getConstants() as $value){
@@ -257,18 +256,13 @@ final class BlockStateDictionary{
 			}
 			$states = $blockTag->getCompoundTag(BlockStateData::TAG_STATES) ??
 				throw new \InvalidArgumentException("Missing states for hashed palette entry $i");
-			$state = new BlockStateData(
-				$blockTag->getString(BlockStateData::TAG_NAME),
-				$states->getValue(),
-				$blockTag->getInt(BlockStateData::TAG_VERSION)
-			);
-			$newState = $upgrader->upgrade($state);
-			$name = $uniqueNames[$newState->getName()] ??= $newState->getName();
+			$name = $blockTag->getString(BlockStateData::TAG_NAME);
+			$name = $uniqueNames[$name] ??= $name;
 			$entries[$blockTag->getInt("network_id")] = new BlockStateDictionaryEntry(
 				$name,
-				$newState->getStates(),
+				$states->getValue(),
 				$meta,
-				$newState->equals($state) ? null : $state
+				null
 			);
 		}
 
