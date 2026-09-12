@@ -103,10 +103,6 @@ class PreSpawnPacketHandler extends PacketHandler{
 			$levelSettings->rainLevel = 0; //TODO: implement these properly
 			$levelSettings->lightningLevel = 0;
 			$levelSettings->commandsEnabled = true;
-			if($protocolId >= ProtocolInfo::PROTOCOL_1_26_40){
-				$levelSettings->disablePersona = true;
-				$levelSettings->disableCustomSkins = true;
-			}
 			$levelSettings->gameRules = [
 				"naturalregeneration" => new BoolGameRule(false, false), //Hack for client side regeneration
 				"locatorbar" => new BoolGameRule(false, false) //Disable client-side tracking of nearby players

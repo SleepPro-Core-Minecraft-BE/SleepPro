@@ -31,10 +31,21 @@ use function is_array;
 use function is_string;
 use function json_decode;
 use function json_encode;
+use function count;
 use const JSON_THROW_ON_ERROR;
 
 class LegacySkinAdapter implements SkinAdapter{
+	private const MAX_PERSONA_CACHE_SIZE = 256;
+
+	/** @var array<string, array{SkinData, string}> */
+	private static array $personaSkinCache = [];
+
 	public function toSkinData(Skin $skin) : SkinData{
+		$cachedPersona = self::$personaSkinCache[$skin->getSkinId()] ?? null;
+		if($cachedPersona !== null && $cachedPersona[1] === $skin->getSkinData()){
+			return $cachedPersona[0];
+		}
+
 		$capeData = $skin->getCapeData();
 		$capeImage = $capeData === "" ? new SkinImage(0, 0, "") : new SkinImage(32, 64, $capeData);
 		$geometryName = $skin->getGeometryName();
@@ -66,6 +77,10 @@ class LegacySkinAdapter implements SkinAdapter{
 				$skinImage->getHeight()
 			);
 			$skinId = $data->getSkinId();
+			self::$personaSkinCache[$skinId] = [$data, $coreSkinData];
+			if(count(self::$personaSkinCache) > self::MAX_PERSONA_CACHE_SIZE){
+				array_shift(self::$personaSkinCache);
+			}
 			return new Skin($skinId, $coreSkinData);
 		}
 
@@ -83,8 +98,7 @@ class LegacySkinAdapter implements SkinAdapter{
 
 	/**
 	 * Creates a valid classic preview for APIs which only understand classic skins.
-	 * The converted image is also sent back to clients as a classic skin. This avoids
-	 * disconnects caused by Character Creator pieces unknown to another client build.
+	 * Network clients still receive the untouched Persona skin from the cache above.
 	 */
 	private static function resizeSkinImageToClassic(string $source, int $width, int $height) : string{
 		if($width === 64 && ($height === 32 || $height === 64)){
