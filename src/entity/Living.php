@@ -64,6 +64,7 @@ use pocketmine\timings\Timings;
 use pocketmine\utils\Binary;
 use pocketmine\utils\Limits;
 use pocketmine\utils\Utils;
+use pocketmine\world\particle\ItemBreakParticle;
 use pocketmine\world\sound\BurpSound;
 use pocketmine\world\sound\EntityLandSound;
 use pocketmine\world\sound\EntityLongFallSound;
@@ -538,9 +539,15 @@ abstract class Living extends Entity{
 	}
 
 	private function damageItem(Durable $item, int $durabilityRemoved) : void{
+		$oldItem = clone $item;
 		$item->applyDamage($durabilityRemoved);
 		if($item->isBroken()){
 			$this->broadcastSound(new ItemBreakSound());
+			$viewers = $this->getViewers();
+			if($this instanceof Player){
+				$viewers[] = $this;
+			}
+			$this->getWorld()->addParticle($this->location->asVector3(), new ItemBreakParticle($oldItem), $viewers);
 		}
 	}
 

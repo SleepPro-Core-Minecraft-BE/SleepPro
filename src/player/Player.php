@@ -99,6 +99,7 @@ use pocketmine\inventory\transaction\TransactionCancelledException;
 use pocketmine\inventory\transaction\TransactionValidationException;
 use pocketmine\item\ConsumableItem;
 use pocketmine\item\Durable;
+use pocketmine\item\Elytra;
 use pocketmine\item\enchantment\EnchantmentInstance;
 use pocketmine\item\enchantment\MeleeWeaponEnchantment;
 use pocketmine\item\Item;
@@ -136,6 +137,7 @@ use pocketmine\world\ChunkLoader;
 use pocketmine\world\ChunkTicker;
 use pocketmine\world\format\Chunk;
 use pocketmine\world\Position;
+use pocketmine\world\particle\ItemBreakParticle;
 use pocketmine\world\sound\EntityAttackNoDamageSound;
 use pocketmine\world\sound\EntityAttackSound;
 use pocketmine\world\sound\FireExtinguishSound;
@@ -1541,6 +1543,21 @@ class Player extends Human implements CommandSender, ChunkListener, IPlayer, Nev
 			$this->entityBaseTick($tickDiff);
 			Timings::$entityBaseTick->stopTiming();
 
+			if($this->isGliding()){
+				$elytra = $this->armorInventory->getChestplate();
+				if(!$elytra instanceof Elytra || !$elytra->isUsable()){
+					$this->setGliding(false);
+				}elseif($this->hasFiniteResources() && $currentTick % 20 === 0){
+					$oldElytra = clone $elytra;
+					$elytra->applyFlightDamage();
+					$this->armorInventory->setChestplate($elytra);
+					if(!$elytra->isUsable()){
+						$this->setGliding(false);
+						$this->broadcastItemBreakEffects($oldElytra);
+					}
+				}
+			}
+
 			if($this->isCreative() && $this->fireTicks > 1){
 				$this->fireTicks = 1;
 			}
@@ -1673,7 +1690,7 @@ class Player extends Human implements CommandSender, ChunkListener, IPlayer, Nev
 
 			if(!$damagedOrDeducted || $this->hasFiniteResources()){
 				if($newHeldItem instanceof Durable && $newHeldItem->isBroken()){
-					$this->broadcastSound(new ItemBreakSound());
+					$this->broadcastItemBreakEffects($oldHeldItem);
 				}
 				$this->inventory->setItemInHand($newHeldItem);
 				$heldItemChanged = true;
@@ -1698,6 +1715,13 @@ class Player extends Human implements CommandSender, ChunkListener, IPlayer, Nev
 				$this->dropItem($drop);
 			}
 		}
+	}
+
+	private function broadcastItemBreakEffects(Item $brokenItem) : void{
+		$this->broadcastSound(new ItemBreakSound());
+		$viewers = $this->getViewers();
+		$viewers[] = $this;
+		$this->getWorld()->addParticle($this->location->asVector3(), new ItemBreakParticle($brokenItem), $viewers);
 	}
 
 	/**
@@ -2079,7 +2103,7 @@ class Player extends Human implements CommandSender, ChunkListener, IPlayer, Nev
 			if($item->onInteractEntity($this, $entity, $clickPos)){
 				if($this->hasFiniteResources() && !$item->equalsExact($oldItem) && $oldItem->equalsExact($this->inventory->getItemInHand())){
 					if($item instanceof Durable && $item->isBroken()){
-						$this->broadcastSound(new ItemBreakSound());
+						$this->broadcastItemBreakEffects($oldItem);
 					}
 					$this->inventory->setItemInHand($item);
 				}
@@ -2144,6 +2168,12 @@ class Player extends Human implements CommandSender, ChunkListener, IPlayer, Nev
 	public function toggleGlide(bool $glide) : bool{
 		if($glide === $this->gliding){
 			return true;
+		}
+		if($glide){
+			$chestplate = $this->armorInventory->getChestplate();
+			if($this->onGround || !$chestplate instanceof Elytra || !$chestplate->isUsable()){
+				return false;
+			}
 		}
 		$ev = new PlayerToggleGlideEvent($this, $glide);
 		$ev->call();
