@@ -127,6 +127,12 @@ class LoginPacketHandler extends PacketHandler{
 				}catch(JwtException $e){
 					throw PacketHandlingException::wrap($e, "Error parsing self-signed authentication token");
 				}
+				// Early 1.26 OpenID clients used the legacy "identity" claim while newer
+				// clients call the same value "leguuid". PlayFab ID may also be omitted
+				// for offline identities. Normalize both wire variants before mapping.
+				$claimsArray["leguuid"] ??= $claimsArray["identity"] ?? null;
+				$claimsArray["mid"] ??= $claimsArray["PlayFabID"] ?? "";
+				unset($claimsArray["identity"], $claimsArray["PlayFabID"]);
 				$claims = $this->mapSelfSignedTokenBody($claimsArray);
 
 				if(!Uuid::isValid($claims->leguuid)){

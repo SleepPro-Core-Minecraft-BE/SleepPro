@@ -71,6 +71,11 @@ final class AuthJwtHelper{
 		}catch(JwtException $e){
 			throw new VerifyLoginException("Failed to parse JWT: " . $e->getMessage(), null, 0, $e);
 		}
+		if($claims instanceof SelfSignedJwtBody){
+			$claimsArray["leguuid"] ??= $claimsArray["identity"] ?? null;
+			$claimsArray["mid"] ??= $claimsArray["PlayFabID"] ?? "";
+			unset($claimsArray["identity"], $claimsArray["PlayFabID"]);
+		}
 
 		$mapper = new \JsonMapper();
 		$mapper->bExceptionOnUndefinedProperty = false; //we only care about the properties we're using in this case
