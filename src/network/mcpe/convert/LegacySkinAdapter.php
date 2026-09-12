@@ -31,12 +31,9 @@ use function is_array;
 use function is_string;
 use function json_decode;
 use function json_encode;
-use function random_bytes;
-use function str_repeat;
 use const JSON_THROW_ON_ERROR;
 
 class LegacySkinAdapter implements SkinAdapter{
-
 	public function toSkinData(Skin $skin) : SkinData{
 		$capeData = $skin->getCapeData();
 		$capeImage = $capeData === "" ? new SkinImage(0, 0, "") : new SkinImage(32, 64, $capeData);
@@ -44,19 +41,32 @@ class LegacySkinAdapter implements SkinAdapter{
 		if($geometryName === ""){
 			$geometryName = "geometry.humanoid.custom";
 		}
+		$geometryData = $skin->getGeometryData();
+		if($geometryData === ""){
+			//the client drops the connection if it receives an empty geometry string
+			$geometryData = "null";
+		}
 		return new SkinData(
 			$skin->getSkinId(),
 			"", //TODO: playfab ID
 			json_encode(["geometry" => ["default" => $geometryName]], JSON_THROW_ON_ERROR),
-			SkinImage::fromLegacy($skin->getSkinData()), [],
+			SkinImage::fromLegacy($skin->getSkinData()),
+			[],
 			$capeImage,
-			$skin->getGeometryData()
+			$geometryData
 		);
 	}
 
 	public function fromSkinData(SkinData $data) : Skin{
 		if($data->isPersona()){
-			return new Skin("Standard_Custom", str_repeat(random_bytes(3) . "\xff", 4096));
+			$skinImage = $data->getSkinImage();
+			$coreSkinData = self::resizeSkinImageToClassic(
+				$skinImage->getData(),
+				$skinImage->getWidth(),
+				$skinImage->getHeight()
+			);
+			$skinId = $data->getSkinId();
+			return new Skin($skinId, $coreSkinData);
 		}
 
 		$capeData = $data->isPersonaCapeOnClassic() ? "" : $data->getCapeImage()->getData();
@@ -68,6 +78,29 @@ class LegacySkinAdapter implements SkinAdapter{
 			throw new InvalidSkinException("Missing geometry name field");
 		}
 
-		return new Skin($data->getSkinId(), $data->getSkinImage()->getData(), $capeData, $geometryName, $data->getGeometryData());
+		return new Skin($data->getSkinId(), $data->getSkinImage()->getData(), $capeData, $geometryName, $data->getGeometryDataJson());
+	}
+
+	/**
+	 * Creates a valid classic preview for APIs which only understand classic skins.
+	 * The converted image is also sent back to clients as a classic skin. This avoids
+	 * disconnects caused by Character Creator pieces unknown to another client build.
+	 */
+	private static function resizeSkinImageToClassic(string $source, int $width, int $height) : string{
+		if($width === 64 && ($height === 32 || $height === 64)){
+			return $source;
+		}
+
+		$targetSize = 128;
+		$result = "";
+		for($y = 0; $y < $targetSize; ++$y){
+			$sourceY = (int) ($y * $height / $targetSize);
+			for($x = 0; $x < $targetSize; ++$x){
+				$sourceX = (int) ($x * $width / $targetSize);
+				$offset = ($sourceY * $width + $sourceX) * 4;
+				$result .= $source[$offset] . $source[$offset + 1] . $source[$offset + 2] . $source[$offset + 3];
+			}
+		}
+		return $result;
 	}
 }
