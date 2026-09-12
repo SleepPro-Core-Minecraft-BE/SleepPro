@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace pocketmine\network\mcpe\handler;
 
-use pocketmine\custom\block\CustomBlockRegistry;
 
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\network\mcpe\cache\CraftingDataCache;
@@ -107,7 +106,7 @@ class PreSpawnPacketHandler extends PacketHandler{
 				"naturalregeneration" => new BoolGameRule(false, false), //Hack for client side regeneration
 				"locatorbar" => new BoolGameRule(false, false) //Disable client-side tracking of nearby players
 			];
-			$customBlocksEnabled = CustomBlockRegistry::getInstance()->hasRegisteredBlocks();
+			$customBlocksEnabled = false;
 			$levelSettings->experiments = new Experiments(
 				$customBlocksEnabled ? ["data_driven_items" => true] : [],
 				$customBlocksEnabled
@@ -140,7 +139,7 @@ class PreSpawnPacketHandler extends PacketHandler{
 				true,
 				null,
 				new ServerTelemetryData("", "", "", ""),
-				CustomBlockRegistry::getInstance()->getPaletteEntries(),
+				[],
 				0,
 				$typeConverter->getItemTypeDictionary()->getEntries(),
 			));
