@@ -3,6 +3,10 @@
 # Some of these settings are safe, others can break your server if modified incorrectly
 # New settings/defaults won't appear automatically in this file when upgrading.
 
+# Allows plugins containing plugin.yml and src/ to be loaded directly from the plugins directory.
+# Keep disabled on production servers; enable while developing plugins without DevTools.
+devtools-mode: false
+
 settings:
   #Whether to send all strings translated to server locale or let the device handle them
   force-language: false
