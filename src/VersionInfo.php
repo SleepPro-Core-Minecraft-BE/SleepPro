@@ -31,7 +31,7 @@ use function str_repeat;
 
 final class VersionInfo{
 	public const NAME = "SleepPro";
-	public const PUBLIC_VERSION = "0.1-PUBLIC";
+	public const PUBLIC_VERSION = "0.2-PUBLIC";
 	public const PUBLIC_NOTICE = "КУПИТЬ ПАРТНЁРКУ SLEEPPRO С ВАНИЛЬНОСТЬЮ";
 	public const PUBLIC_CONTACT = "https://vk.com/sleepwpro";
 	public const BASE_VERSION = "5.44.2";

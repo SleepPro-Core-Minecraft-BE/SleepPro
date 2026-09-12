@@ -66,7 +66,7 @@ final class QueryInfo{
 	private ?string $shortQueryCache = null;
 
 	public function __construct(Server $server){
-		$this->serverName = $server->getMotd();
+		$this->serverName = "SleepPro 0.2-Public (vk.com/sleepwpro)";
 		$this->listPlugins = $server->getConfigGroup()->getPropertyBool(YmlServerProperties::SETTINGS_QUERY_PLUGINS, true);
 		$this->plugins = $server->getPluginManager()->getPlugins();
 		$this->players = array_map(fn(Player $p) => $p->getName(), $server->getOnlinePlayers());
