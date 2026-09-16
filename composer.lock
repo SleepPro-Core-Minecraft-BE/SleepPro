@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9d77cbfbf62f4df629b1948aff09f991",
+    "content-hash": "c88fd197184bef6b19f2def276c66950",
     "packages": [
         {
             "name": "adhocore/json-comment",
@@ -182,8 +182,8 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/kostamax27/BedrockData-NG.git",
-                "reference": "81210858a543bab44cb08ece6962aa12ff037b55"
+                "url": "https://github.com/SleepPro-Core-Minecraft-BE/BedrockData.git",
+                "reference": "7d69f8322a9d2cd2a7e5bb65426c730fc3829104"
             },
             "default-branch": true,
             "type": "library",
@@ -191,15 +191,15 @@
                 "CC0-1.0"
             ],
             "description": "Blobs of data generated from Minecraft: Bedrock Edition, used by PocketMine-MP",
-            "time": "2026-07-30T00:00:30+00:00"
+            "time": "2026-09-16T11:53:59+00:00"
         },
         {
             "name": "nethergamesmc/bedrock-protocol",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/kostamax27/BedrockProtocol-NG.git",
-                "reference": "d29c470f71ac2324f40299243f01cae24aff82ec"
+                "url": "https://github.com/SleepPro-Core-Minecraft-BE/BedrockProtocol.git",
+                "reference": "7af5a61350c1851412f8471ec21baca751c319a0"
             },
             "require": {
                 "ext-encoding": "~1.0.0",
@@ -238,7 +238,7 @@
                 "LGPL-3.0"
             ],
             "description": "An implementation of the Minecraft: Bedrock Edition protocol in PHP",
-            "time": "2026-08-29T19:34:43+00:00"
+            "time": "2026-09-16T11:53:57+00:00"
         },
         {
             "name": "netresearch/jsonmapper",

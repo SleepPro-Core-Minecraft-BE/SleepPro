@@ -67,6 +67,7 @@ final class YmlServerProperties{
 	public const CONSOLE_TITLE_TICK = 'console.title-tick';
 	public const DEBUG = 'debug';
 	public const DEBUG_LEVEL = 'debug.level';
+	public const DEVTOOLS_MODE = 'devtools-mode';
 	public const LEVEL_SETTINGS = 'level-settings';
 	public const LEVEL_SETTINGS_DEFAULT_FORMAT = 'level-settings.default-format';
 	public const LEVEL_SETTINGS_MIN_Y = 'level-settings.min-y';

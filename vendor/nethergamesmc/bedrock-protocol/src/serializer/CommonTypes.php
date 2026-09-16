@@ -547,45 +547,6 @@ final class CommonTypes{
 		}
 	}
 
-	private static function readCraftingRecipeDescriptor(ByteBufferReader $in, int $protocolId) : StringIdMetaItemDescriptor|TagItemDescriptor|MolangItemDescriptor|null{
-		$hasDescriptor = VarInt::readUnsignedInt($in);
-		if($hasDescriptor === 0){
-			$meta = VarInt::readSignedInt($in);
-			if($meta !== 32767){
-				throw new PacketDecodeException("Expected meta 32767 for empty recipe descriptor, got $meta");
-			}
-			return null;
-		}
-		if($hasDescriptor !== 1){
-			throw new PacketDecodeException("Expected 0 or 1 for recipe descriptor variant, got $hasDescriptor");
-		}
-
-		$descriptorType = ItemDescriptorType::fromPacket(self::getString($in));
-		return match($descriptorType){
-			ItemDescriptorType::STRING_ID_META => StringIdMetaItemDescriptor::read($in, $protocolId),
-			ItemDescriptorType::TAG => TagItemDescriptor::read($in, $protocolId),
-			ItemDescriptorType::MOLANG => MolangItemDescriptor::read($in, $protocolId),
-			ItemDescriptorType::EMPTY => null,
-			default => throw new PacketDecodeException("Unsupported crafting recipe descriptor type " . $descriptorType->value),
-		};
-	}
-
-	private static function writeCraftingRecipeDescriptor(ByteBufferWriter $out, int $protocolId, StringIdMetaItemDescriptor|TagItemDescriptor|MolangItemDescriptor|IntIdMetaItemDescriptor|ComplexAliasItemDescriptor|null $descriptor) : void{
-		if($descriptor === null){
-			VarInt::writeUnsignedInt($out, 0);
-			VarInt::writeSignedInt($out, 32767);
-			return;
-		}
-		$descriptorType = $descriptor->getDescriptorType();
-		if($descriptorType === ItemDescriptorType::INT_ID_META || $descriptorType === ItemDescriptorType::COMPLEX_ALIAS){
-			throw new \InvalidArgumentException("Item descriptor type " . $descriptorType->value . " cannot be used in a crafting recipe since 1.26.40");
-		}
-
-		VarInt::writeUnsignedInt($out, 1);
-		self::putString($out, $descriptorType->value);
-		$descriptor->write($out, $protocolId);
-	}
-
 	public static function readItemDescriptorMess(ByteBufferReader $in, int $protocolId) : StringIdMetaItemDescriptor|TagItemDescriptor|MolangItemDescriptor|IntIdMetaItemDescriptor|ComplexAliasItemDescriptor|null{
 		if($protocolId < ProtocolInfo::PROTOCOL_1_26_40){
 			$descriptorTypeId = Byte::readUnsigned($in);
@@ -653,28 +614,15 @@ final class CommonTypes{
 
 	/** @throws DataDecodeException */
 	public static function getRecipeIngredient(ByteBufferReader $in, int $protocolId) : RecipeIngredient{
-		if($protocolId >= ProtocolInfo::PROTOCOL_1_26_40){
-			// CraftingDataPacket was converted to Cereal in 1.26.40. Recipe
-			// ingredient counts remain signed VarInts; only stack-request
-			// ingredients use the newer unsigned 16-bit representation.
-			$descriptor = self::readCraftingRecipeDescriptor($in, $protocolId);
-			$count = VarInt::readSignedInt($in);
-		}else{
-			$descriptor = self::readItemDescriptorMess($in, $protocolId);
-			$count = VarInt::readSignedInt($in);
-		}
+		$descriptor = self::readItemDescriptorMess($in, $protocolId);
+		$count = VarInt::readSignedInt($in);
 
 		return new RecipeIngredient($descriptor, $count);
 	}
 
 	public static function putRecipeIngredient(ByteBufferWriter $out, int $protocolId, RecipeIngredient $ingredient) : void{
-		if($protocolId >= ProtocolInfo::PROTOCOL_1_26_40){
-			self::writeCraftingRecipeDescriptor($out, $protocolId, $ingredient->getDescriptor());
-			VarInt::writeSignedInt($out, $ingredient->getCount());
-		}else{
-			self::writeItemDescriptorMess($out, $protocolId, $ingredient->getDescriptor());
-			VarInt::writeSignedInt($out, $ingredient->getCount());
-		}
+		self::writeItemDescriptorMess($out, $protocolId, $ingredient->getDescriptor());
+		VarInt::writeSignedInt($out, $ingredient->getCount());
 	}
 
 	/**

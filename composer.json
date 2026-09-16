@@ -104,11 +104,11 @@
    "repositories": [
       {
          "type": "git",
-         "url":  "https://github.com/kostamax27/BedrockProtocol-NG.git"
+         "url":  "https://github.com/SleepPro-Core-Minecraft-BE/BedrockProtocol.git"
       },
       {
          "type": "git",
-         "url":  "https://github.com/kostamax27/BedrockData-NG.git"
+         "url":  "https://github.com/SleepPro-Core-Minecraft-BE/BedrockData.git"
       }
    ]
 }

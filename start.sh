@@ -33,10 +33,10 @@ if [ "$PHP_BINARY" == "" ]; then
 fi
 
 if [ "$POCKETMINE_FILE" == "" ]; then
-	if [ -f ./SleepPro-0.3-PUBLIC.phar ]; then
-		POCKETMINE_FILE="./SleepPro-0.3-PUBLIC.phar"
+	if [ -f ./SleepPro-0.4-PUBLIC.phar ]; then
+		POCKETMINE_FILE="./SleepPro-0.4-PUBLIC.phar"
 	else
-		echo "SleepPro-0.3-PUBLIC.phar not found"
+		echo "SleepPro-0.4-PUBLIC.phar not found"
 		echo "Downloads can be found at https://github.com/SleepPro-Core-Minecraft-BE/SleepPro/releases"
 		exit 1
 	fi
