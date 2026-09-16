@@ -183,7 +183,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/SleepPro-Core-Minecraft-BE/BedrockData.git",
-                "reference": "7d69f8322a9d2cd2a7e5bb65426c730fc3829104"
+                "reference": "8e62a1bfd170ad5920fa2c09f384bdf941354996"
             },
             "default-branch": true,
             "type": "library",
@@ -191,7 +191,7 @@
                 "CC0-1.0"
             ],
             "description": "Blobs of data generated from Minecraft: Bedrock Edition, used by PocketMine-MP",
-            "time": "2026-09-16T11:53:59+00:00"
+            "time": "2026-09-16T12:54:33+00:00"
         },
         {
             "name": "nethergamesmc/bedrock-protocol",
