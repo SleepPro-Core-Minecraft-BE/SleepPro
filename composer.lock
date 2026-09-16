@@ -199,7 +199,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/SleepPro-Core-Minecraft-BE/BedrockProtocol.git",
-                "reference": "7af5a61350c1851412f8471ec21baca751c319a0"
+                "reference": "54ba892ee4a57c6d0942a4977a7ce8c4e9085807"
             },
             "require": {
                 "ext-encoding": "~1.0.0",
