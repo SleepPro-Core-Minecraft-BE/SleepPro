@@ -211,7 +211,9 @@ final class BlockTranslator{
 		}
 
 		try{
-			$blockStateData = $this->blockStateSerializer->serialize($internalStateId);
+			$blockStateData = GlobalBlockStateHandlers::getUpgrader()->getBlockStateUpgrader()->upgrade(
+				$this->blockStateSerializer->serialize($internalStateId)
+			);
 
 			$networkId = $this->blockStateDictionary->lookupStateIdFromData($blockStateData);
 			if($networkId === null){

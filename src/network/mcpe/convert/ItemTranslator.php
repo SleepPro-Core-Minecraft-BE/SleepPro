@@ -31,6 +31,7 @@ use pocketmine\data\bedrock\item\ItemTypeDeserializeException;
 use pocketmine\data\bedrock\item\ItemTypeSerializeException;
 use pocketmine\data\bedrock\item\SavedItemData;
 use pocketmine\item\Item;
+use pocketmine\world\format\io\GlobalBlockStateHandlers;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\network\mcpe\protocol\ProtocolInfo;
 use pocketmine\network\mcpe\protocol\serializer\ItemTypeDictionary;
@@ -84,6 +85,7 @@ final class ItemTranslator{
 		$blockStateData = $itemData->getBlock();
 
 		if($blockStateData !== null){
+			$blockStateData = GlobalBlockStateHandlers::getUpgrader()->getBlockStateUpgrader()->upgrade($blockStateData);
 			$blockRuntimeId = $this->blockStateDictionary->lookupStateIdFromData($blockStateData);
 			if($blockRuntimeId === null){
 				throw new AssumptionFailedError("Unmapped blockstate returned by blockstate serializer: " . $blockStateData->toNbt());
